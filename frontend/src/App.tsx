@@ -2,7 +2,7 @@
 // import './App.css';
 import React from 'react';
 import { Routes, Route } from "react-router-dom";
-import Homepage from "./components/Homepage";
+import Homepage from "./components/dashboard/Dashboard";
 import { Box } from '@mui/material';
 
 function App() {

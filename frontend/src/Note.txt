@@ -1,0 +1,21 @@
+Color Palette:
+#191919 | rgb(25, 25, 25) | Black
+#E5E5CB | rgb(229, 229, 203) | Beige
+
+
+
+Font Color:
+
+
+
+Font Family:
+   Roboto
+   Roboto Serif
+
+
+Font Size: 
+   12px
+   16px
+   18px
+   24px
+   26px

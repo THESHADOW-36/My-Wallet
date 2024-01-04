@@ -1,6 +1,6 @@
 Color Palette:
-#191919 | rgb(25, 25, 25) | Black
-#E5E5CB | rgb(229, 229, 203) | Beige
+#191919 | rgb(25, 25, 25) | Black (Navbar, Sidebar)
+#E5E5CB | rgb(229, 229, 203) | Beige (page background color)
 
 
 

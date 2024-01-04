@@ -1,5 +1,5 @@
 import { AccountBalanceTwoTone, CurrencyExchangeTwoTone, DashboardCustomizeTwoTone, DashboardTwoTone, LogoutTwoTone, SettingsTwoTone, WorkHistoryTwoTone } from "@mui/icons-material";
-import { dIcons } from "./SidebarStyle";
+import { dIcons } from "../sidebar/SidebarStyle";
 
 export const sbList1 = [
    {

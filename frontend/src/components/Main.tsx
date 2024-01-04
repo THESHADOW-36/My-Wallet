@@ -8,10 +8,14 @@ import Sidebar from './sidebar/Sidebar'
 const mainStyle = {
    fontFamily: 'Roboto, sans-serif',
    // fontFamily: 'Roboto Serif, serif'
+   position: 'relative'
 }
 
 const mNavbar = {
    color: 'white',
+   position: 'sticky',
+   top: '0',
+   zIndex: (theme: any) => theme.zIndex.drawer + 1
 }
 const mContent = {
    display: 'flex'
@@ -20,7 +24,7 @@ const mContent = {
 const mSidebar = {
    color: 'white',
    minWidth: '240px',
-   height: '89.5vh',
+   height: '89.5vh'
    // transition: '1s',
    // transitionProperty: 'width',
    // transitionTimingFunction: 'ease-out'
@@ -29,13 +33,13 @@ const mSidebar = {
 const mMiniSidebar = {
    color: 'white',
    minWidth: '60px',
-   height: '89.5vh',
+   height: '89.5vh'
 }
 
 const mApp = {
    backgroundColor: '#E5E5CB',
    width: '100%',
-   height: '89.5vh'
+   // height: '89.5vh'
 }
 
 

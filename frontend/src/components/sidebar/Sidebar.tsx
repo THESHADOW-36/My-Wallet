@@ -1,6 +1,6 @@
 import { Avatar, Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material'
 import { dProEmail, dProName, dProText, dProfile, drawer, mdListButton, mdListIcon, mdProfile, miniDrawer } from './SidebarStyle'
-import { sbList1 } from './SidebarData'
+import { sbList1 } from '../data/SidebarData'
 
 
 interface sbToggle {

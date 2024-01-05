@@ -1,41 +1,62 @@
+import { AccountBalanceTwoTone, CurrencyExchangeTwoTone, DataSaverOnTwoTone } from "@mui/icons-material";
 import { Box, LinearProgress } from "@mui/material";
 
 export const mwKPIData = [
    {
       name: 'Income',
       cash: '₹ 0,00,000',
-      logo: '',
+      // logo:
+      //    <Box sx={{ backgroundImage: 'radial-gradient(#66d95a 0%, #48cd31 50%, #1b8200 100%)', borderRadius: '50%', width: '54px', height: '54px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px' }}>
+      //       <AccountBalanceTwoTone sx={{ fontSize: '32px' }} />
+      //    </Box>,
       bar:
          <Box>
-            <LinearProgress variant='determinate' value={90} color='inherit' sx={{ color: '#00C914' }} />
-            <LinearProgress variant='determinate' value={90} color='inherit' sx={{ color: '#00C914' }} />
-            <LinearProgress variant='determinate' value={90} color='inherit' sx={{ color: '#00C914' }} />
-         </Box>
+            <LinearProgress variant='determinate' value={90} color='inherit' sx={{ color: '#3EB748' }} />
+            <LinearProgress variant='determinate' value={90} color='inherit' sx={{ color: '#3EB748' }} />
+            {/* <LinearProgress variant='determinate' value={90} color='inherit' sx={{ color: '#3EB748' }} /> */}
+         </Box>,
+      // today: 'Today',
+      // todayCash: '₹ 0,00,000',
+      // thisMonth: 'This Month',
+      // thisMonthCash: '₹ 0,00,000'
    },
    {
       name: 'Expenses',
       cash: '₹ 0,00,000',
-      logo: '',
+      // logo:
+      //    <Box sx={{ backgroundImage: 'radial-gradient( #FDD819 10%, #E80505 100%)', borderRadius: '50%', width: '54px', height: '54px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px' }}>
+      //       <CurrencyExchangeTwoTone sx={{ fontSize: '32px' }} />
+      //    </Box>,
       bar:
          <Box>
-            <LinearProgress variant='determinate' value={60} color='inherit' sx={{ color: '#B30600' }} />
-            <LinearProgress variant='determinate' value={60} color='inherit' sx={{ color: '#B30600' }} />
-            <LinearProgress variant='determinate' value={60} color='inherit' sx={{ color: '#B30600' }} />
-         </Box>
+            <LinearProgress variant='determinate' value={60} color='inherit' sx={{ color: '#991E1A' }} />
+            <LinearProgress variant='determinate' value={60} color='inherit' sx={{ color: '#991E1A' }} />
+            {/* <LinearProgress variant='determinate' value={60} color='inherit' sx={{ color: '#991E1A' }} /> */}
+         </Box>,
+      // today: 'Today',
+      // todayCash: '₹ 0,00,000',
+      // thisMonth: 'This Month',
+      // thisMonthCash: '₹ 0,00,000'
    },
    {
       name: 'Balance',
       cash: '₹ 0,00,000',
-      logo: '',
+      // logo:
+      //    <Box sx={{ backgroundImage: 'radial-gradient( #52E5E7 10%, #130CB7 100%)', borderRadius: '50%', width: '54px', height: '54px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px' }}>
+      //       <DataSaverOnTwoTone sx={{ fontSize: '34px' }} />
+      //    </Box>,
       bar:
          <Box>
-            <LinearProgress variant='determinate' value={30} color='inherit' sx={{ color: '#2347BD' }} />
-            <LinearProgress variant='determinate' value={30} color='inherit' sx={{ color: '#2347BD' }} />
-            <LinearProgress variant='determinate' value={30} color='inherit' sx={{ color: '#2347BD' }} />
-         </Box>
+            <LinearProgress variant='determinate' value={30} color='inherit' sx={{ color: '#4B70E6' }} />
+            <LinearProgress variant='determinate' value={30} color='inherit' sx={{ color: '#4B70E6' }} />
+            {/* <LinearProgress variant='determinate' value={30} color='inherit' sx={{ color: '#4B70E6' }} /> */}
+         </Box>,
+      // today: 'Today',
+      // todayCash: '₹ 0,00,000',
+      // thisMonth: 'This Month',
+      // thisMonthCash: '₹ 0,00,000'
    },
 ]
-
 export const barChartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 export const barChartIncomeData = [50000, 58000, 52000, 61000, 70000, 66000, 60000, 50000, 58000, 52000, 61000, 70000, 66000, 64000, 80000]
@@ -81,7 +102,7 @@ export const dbRecentTableContent = [
       name: 'Television',
       category: 'Electronic',
       expenses: '45,000',
-      method: 'Credit Card, Debit Card, UPI, Cash',
+      method: 'Credit Card',
    },
    {
       num: '2',
@@ -89,7 +110,7 @@ export const dbRecentTableContent = [
       name: 'Television',
       category: 'Electronic',
       expenses: '45,000',
-      method: 'Credit Card, Debit Card, UPI, Cash',
+      method: 'Debit Card',
    },
    {
       num: '3',
@@ -97,7 +118,7 @@ export const dbRecentTableContent = [
       name: 'Television',
       category: 'Electronic',
       expenses: '45,000',
-      method: 'Credit Card, Debit Card, UPI, Cash',
+      method: 'UPI',
    },
    {
       num: '4',
@@ -105,7 +126,7 @@ export const dbRecentTableContent = [
       name: 'Television',
       category: 'Electronic',
       expenses: '45,000',
-      method: 'Credit Card, Debit Card, UPI, Cash',
+      method: 'Cash',
    },
    {
       num: '5',
@@ -113,7 +134,7 @@ export const dbRecentTableContent = [
       name: 'Television',
       category: 'Electronic',
       expenses: '45,000',
-      method: 'Credit Card, Debit Card, UPI, Cash',
+      method: 'Credit Card',
    },
    {
       num: '6',
@@ -121,7 +142,7 @@ export const dbRecentTableContent = [
       name: 'Television',
       category: 'Electronic',
       expenses: '45,000',
-      method: 'Credit Card, Debit Card, UPI, Cash',
+      method: 'Debit Card',
    },
    {
       num: '7',
@@ -129,7 +150,7 @@ export const dbRecentTableContent = [
       name: 'Television',
       category: 'Electronic',
       expenses: '45,000',
-      method: 'Credit Card, Debit Card, UPI, Cash',
+      method: 'UPI',
    },
    {
       num: '8',
@@ -137,7 +158,7 @@ export const dbRecentTableContent = [
       name: 'Television',
       category: 'Electronic',
       expenses: '45,000',
-      method: 'Credit Card, Debit Card, UPI, Cash',
+      method: 'Cash',
    },
    {
       num: '9',
@@ -145,7 +166,7 @@ export const dbRecentTableContent = [
       name: 'Television',
       category: 'Electronic',
       expenses: '45,000',
-      method: 'Credit Card, Debit Card, UPI, Cash',
+      method: 'Credit Card',
    },
    {
       num: '10',
@@ -153,6 +174,6 @@ export const dbRecentTableContent = [
       name: 'Television',
       category: 'Electronic',
       expenses: '45,000',
-      method: 'Credit Card, Debit Card, UPI, Cash',
+      method: 'Debit Card',
    },
 ]

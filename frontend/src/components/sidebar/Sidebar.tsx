@@ -1,5 +1,5 @@
 import { Avatar, Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material'
-import { dProEmail, dProName, dProText, dProfile, drawer, mdListButton, mdListIcon, mdProfile, miniDrawer } from './SidebarStyle'
+import { dProAvatar, dProEmail, dProName, dProfile, dSidebarContentButton, dSidebarContentName, drawer, mdListButton, mdListIcon, mdProfile, miniDrawer } from './SidebarStyle'
 import { sbList1 } from '../data/SidebarData'
 
 
@@ -17,8 +17,8 @@ const Sidebar = (prop: sbToggle) => {
             <Drawer sx={drawer} open={prop.sidebarToggle} onClose={() => prop.setSidebarToggle(false)} variant='permanent'>
                <Toolbar />
                <Box sx={dProfile}>
-                  <Avatar />
-                  <Box sx={dProText}>
+                  <Avatar sx={dProAvatar} />
+                  <Box>
                      <Typography sx={dProName}>Name</Typography>
                      <Typography sx={dProEmail}>xyz@gmail.com</Typography>
                   </Box>
@@ -26,9 +26,9 @@ const Sidebar = (prop: sbToggle) => {
 
                <List>
                   {sbList1.map((sbl, index) => (
-                     <ListItemButton key={index}>
+                     <ListItemButton sx={dSidebarContentButton} key={index}>
                         <ListItemIcon>{sbl.logo}</ListItemIcon>
-                        <ListItemText>{sbl.name}</ListItemText>
+                        <ListItemText sx={dSidebarContentName}>{sbl.name}</ListItemText>
                      </ListItemButton>
                   ))}
                </List>

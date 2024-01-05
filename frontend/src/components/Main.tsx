@@ -23,8 +23,10 @@ const mContent = {
 
 const mSidebar = {
    color: 'white',
-   minWidth: '240px',
-   height: '89.5vh'
+   minWidth: { xs: '100vw', md: '240px' },
+   height: '89.5vh',
+   position: { xs: 'fixed', md: 'relative' },
+   zIndex: '10'
    // transition: '1s',
    // transitionProperty: 'width',
    // transitionTimingFunction: 'ease-out'
@@ -33,7 +35,8 @@ const mSidebar = {
 const mMiniSidebar = {
    color: 'white',
    minWidth: '60px',
-   height: '89.5vh'
+   height: '89.5vh',
+   display: { xs: 'none', md: 'block', }
 }
 
 const mApp = {

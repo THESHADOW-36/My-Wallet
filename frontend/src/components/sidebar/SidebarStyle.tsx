@@ -5,7 +5,7 @@ export const drawer = {
       // backgroundColor: '#191919',
       backgroundColor: '#1e1e1e',
       color: '#E2DFD2',
-      width: '240px',
+      width: { xs: '100%', md: '240px' },
       height: '100%'
    }
 }
@@ -13,23 +13,37 @@ export const drawer = {
 export const dProfile = {
    display: 'flex',
    alignItems: 'center',
-   padding: '20px 16px'
+   padding: { xs: '30px 16px 20px 30px', md: '20px 16px' }
 }
 
-export const dProText = {
-   marginLeft: '10px'
+export const dProAvatar = {
+   width: { xs: '50px', sm: '56px', md: '40px' },
+   height: { xs: '50px', sm: '56px', md: '40px' },
+   marginRight: { xs: '14px', sm: '16px', md: '14px' }
 }
 
 export const dProName = {
+   fontSize: { xs: '18px', sm: '20px', md: '16px' }
 }
 
 export const dProEmail = {
-   fontSize: '12px'
+   fontSize: { xs: '14px', sm: '16px', md: '12px' }
+}
+
+export const dSidebarContentButton = {
+   paddingLeft: { xs: '32px', md: '20px' },
+   marginTop: { xs: '10px', sm: '18px', md: '0' }
+}
+
+export const dSidebarContentName = {
+   '& .MuiTypography-root': {
+      fontSize: { xs: '18px', sm: '22px', md: '16px' }
+   }
 }
 
 export const dIcons = {
    color: 'white',
-   fontSize: '28px'
+   fontSize: { xs: '30px', sm: '34px', md: '28px' }
 }
 
 

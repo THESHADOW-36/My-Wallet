@@ -1,7 +1,7 @@
 import { AppBar, Box, IconButton, TextField, Toolbar, Typography } from '@mui/material'
-import { Menu } from '@mui/icons-material'
+import { Menu, MoreVertTwoTone } from '@mui/icons-material'
 import { WalletLogo } from '../Logo'
-import { appBar, logoLayout, logoText, menuLogo, searchBar, toolBar } from './NavbarStyle'
+import { appBar, logoLayout, logoText, menuBarLogo, menuDotLogo, searchBar, toolBar } from './NavbarStyle'
 
 
 
@@ -13,8 +13,11 @@ const Navbar = (prop: toggle) => {
       <Box>
          <AppBar sx={appBar}>
             <Toolbar sx={toolBar}>
-               <IconButton sx={menuLogo} onClick={prop.toggleSidebar}><Menu /></IconButton>
-               <Box sx={logoLayout} onClick={prop.toggleSidebar}>
+               <Box>
+                  <IconButton sx={menuBarLogo} onClick={prop.toggleSidebar}><Menu /></IconButton>
+                  <IconButton sx={menuDotLogo} onClick={prop.toggleSidebar}><MoreVertTwoTone /></IconButton>
+               </Box>
+               <Box sx={logoLayout}>
                   <WalletLogo />
                   <Typography sx={logoText}>My Wallet</Typography>
                </Box>

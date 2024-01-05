@@ -1,6 +1,8 @@
 Color Palette:
 #191919 | rgb(25, 25, 25) | Black (Navbar, Sidebar)
 #E5E5CB | rgb(229, 229, 203) | Beige (page background color)
+#991E1A Red(Bar Chart Expense)
+#3EB748 Green(Bar Chart Income)
 
 
 

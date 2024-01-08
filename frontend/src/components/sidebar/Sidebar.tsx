@@ -1,15 +1,38 @@
 import { Avatar, Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material'
 import { dProAvatar, dProEmail, dProName, dProfile, dSidebarContentButton, dSidebarContentName, drawer, mdListButton, mdListIcon, mdProfile, miniDrawer } from './SidebarStyle'
 import { sbList1 } from '../data/SidebarData'
+import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
 
 interface sbToggle {
    sidebarToggle: any,
    setSidebarToggle: any,
-   toggleSidebar: any
+   toggleSidebar: any,
+   loggedIn: any,
+   setLoggedIn: any,
 }
 
 const Sidebar = (prop: sbToggle) => {
+
+   const router = useNavigate();
+
+   function sidebarNavigate(list: any) {
+      if (list.name === 'Dashboard') {
+         router('/')
+      } else if (list.name === 'Income') {
+         router('/income')
+      } else if (list.name === 'Expenses') {
+         router('/expenses')
+      } else if (list.name === 'Categories') {
+         router('/categories')
+      } else if (list.name === 'Settings') {
+         router('/settings')
+      } else if (list.name === 'Logout') {
+         prop.setLoggedIn(false)
+         router('/sign-in')
+      }
+   }
 
    return (
       <Box>
@@ -26,7 +49,7 @@ const Sidebar = (prop: sbToggle) => {
 
                <List>
                   {sbList1.map((sbl, index) => (
-                     <ListItemButton sx={dSidebarContentButton} key={index}>
+                     <ListItemButton sx={dSidebarContentButton} key={index} onClick={() => sidebarNavigate(sbl)} >
                         <ListItemIcon>{sbl.logo}</ListItemIcon>
                         <ListItemText sx={dSidebarContentName}>{sbl.name}</ListItemText>
                      </ListItemButton>
@@ -42,14 +65,14 @@ const Sidebar = (prop: sbToggle) => {
 
                <List>
                   {sbList1.map((sbl, index) => (
-                     <ListItemButton sx={mdListButton} key={index}>
+                     <ListItemButton sx={mdListButton} key={index} onClick={() => sidebarNavigate(sbl)}>
                         <ListItemIcon sx={mdListIcon}>{sbl.logo}</ListItemIcon>
                      </ListItemButton>
                   ))}
                </List>
             </Drawer>
          }
-      </Box>
+      </Box >
    )
 }
 

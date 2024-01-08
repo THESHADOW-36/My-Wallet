@@ -14,10 +14,10 @@ export const sbList1 = [
       logo: <CurrencyExchangeTwoTone sx={dIcons} />,
       name: 'Expenses'
    },
-   {
-      logo: <WorkHistoryTwoTone sx={dIcons} />,
-      name: 'History'
-   },
+   // {
+   //    logo: <WorkHistoryTwoTone sx={dIcons} />,
+   //    name: 'History'
+   // },
    {
       logo: <DashboardCustomizeTwoTone sx={dIcons} />,
       name: 'Categories'

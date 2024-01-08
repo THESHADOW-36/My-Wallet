@@ -42,7 +42,7 @@ export const dbKPIIcon1 = {
    display: 'flex',
    alignItems: 'center',
    justifyContent: 'center',
-   marginRight: '10px'
+   marginRight: '20px'
 }
 
 export const dbKPIIcon2 = {
@@ -53,7 +53,7 @@ export const dbKPIIcon2 = {
    display: 'flex',
    alignItems: 'center',
    justifyContent: 'center',
-   marginRight: '10px'
+   marginRight: '20px'
 }
 
 export const dbKPIIcon3 = {
@@ -64,7 +64,7 @@ export const dbKPIIcon3 = {
    display: 'flex',
    alignItems: 'center',
    justifyContent: 'center',
-   marginRight: '10px'
+   marginRight: '20px'
 }
 
 
@@ -84,13 +84,17 @@ export const dbKPIProgress = {
    marginTop: '20px'
 }
 
+export const dbChartLayout = {
+   backgroundImage: 'radial-gradient(rgba(255,255,255,1) 0%, rgba(170,170,170,0.6) 100%)',
+   boxShadow: '0px 0px 6px 0px gray',
+   marginTop: '20px'
+}
+
 export const dbChart = {
-   height: { sm: '360px' },
    display: 'flex',
    flexDirection: { xs: 'column', sm: 'row' },
    justifyContent: 'space-between',
    padding: '20px 20px 30px 30px',
-   marginTop: '20px'
 }
 
 export const dbBarChart = {
@@ -142,6 +146,8 @@ export const dbChartDataCurrency = {
 }
 
 export const dbRecentTable = {
+   backgroundImage: 'radial-gradient(rgba(255,255,255,1) 0%, rgba(170,170,170,0.3) 100%)',
+   boxShadow: '0px 0px 6px 0px gray',
    marginTop: '20px'
 }
 
@@ -152,5 +158,18 @@ export const dbRtTableHeadCell = {
 
 export const dbRtTableBodyCell = {
    textWrap: 'nowrap',
-   padding: '12px 16px'
+   padding: '10px 16px'
+}
+
+export const tablePagination = {
+   display: 'flex',
+   alignItems: 'center',
+   justifyContent: 'space-between',
+   padding: '10px 10px'
+}
+
+export const tablePaginationText = {
+   fontSize: '14px',
+   fontWeight: '500',
+   marginLeft: '10px'
 }

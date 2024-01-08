@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Box, Card, CardContent, Divider, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
-import { dashboard, dbChart, dbBarChart, dbChartData, dbChartDataCurrency, dbChartDataLayout, dbChartDataName, dbChartDataYear, dbChartYear, dbKPICash, dbKPIName, dbKPIPaper, dbKPIProgress, dbRecentTable, mwContent, dbRtTableHeadCell, dbRtTableBodyCell, dbKPIContent, dbKPIDetails, dbKPIIcon1, dbKPIIcon2, dbKPIIcon3 } from './DashboardStyle'
+import { Box, Card, CardContent, Divider, Grid, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
+import { dashboard, dbChart, dbBarChart, dbChartData, dbChartDataCurrency, dbChartDataLayout, dbChartDataName, dbChartDataYear, dbChartYear, dbKPICash, dbKPIName, dbKPIPaper, dbKPIProgress, dbRecentTable, mwContent, dbRtTableHeadCell, dbRtTableBodyCell, dbKPIContent, dbKPIDetails, dbKPIIcon1, dbKPIIcon2, dbKPIIcon3, dbChartLayout, tablePagination, tablePaginationText } from './DashboardStyle'
 import { Bar } from 'react-chartjs-2'
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js'
-import { barChartExpensesData, barChartIncomeData, barChartLabels, dbChartDataContent, dbRecentTableContent, mwKPIData } from "../data/DbData";
+import { barChartExpensesData, barChartIncomeData, barChartLabels, dbChartDataContent, mwKPIData } from "../data/DbData";
 import { AccountBalanceTwoTone, CurrencyExchangeTwoTone, DataSaverOnTwoTone } from "@mui/icons-material";
+import { mwData } from "../data/MyWalletData";
 
 ChartJS.register(
    CategoryScale,
@@ -57,7 +58,7 @@ const Homepage = () => {
                   <Paper sx={dbKPIPaper}>
                      <Typography sx={dbKPIName}>Income</Typography>
                      <Divider />
-                     
+
                      <Box sx={dbKPIContent}>
                         <Box sx={dbKPIIcon1}>
                            <AccountBalanceTwoTone sx={{ fontSize: '32px' }} />
@@ -73,7 +74,7 @@ const Homepage = () => {
                   <Paper sx={dbKPIPaper}>
                      <Typography sx={dbKPIName}>Expenses</Typography>
                      <Divider />
-                     
+
                      <Box sx={dbKPIContent}>
                         <Box sx={dbKPIIcon2}>
                            <CurrencyExchangeTwoTone sx={{ fontSize: '32px' }} />
@@ -103,32 +104,37 @@ const Homepage = () => {
                </Grid>
             </Grid>
 
-            <Paper sx={dbChart}>
-               <Box sx={dbBarChart}>
-                  <Bar data={barChartData} />
-                  <Typography sx={dbChartYear}>Year 2024</Typography>
-               </Box>
-               <Box sx={dbChartDataLayout}>
-                  <Card sx={dbChartData}>
-                     {dbChartDataContent.map((chartData) => (
-                        <CardContent>
-                           <Typography sx={dbChartDataYear}>{chartData.month}</Typography>
-                           <Typography sx={dbChartDataName}>{chartData.income}</Typography>
-                           <Typography sx={dbChartDataCurrency}>{chartData.incomeCurrency}</Typography>
-                           <Typography sx={dbChartDataName}>{chartData.expenses}</Typography>
-                           <Typography sx={dbChartDataCurrency}>{chartData.expensesCurrency}</Typography>
-                           <Typography sx={dbChartDataName}>{chartData.profit}</Typography>
-                           <Typography sx={dbChartDataCurrency}>{chartData.profitCurrency}</Typography>
-                           <Typography sx={dbChartDataName}>{chartData.loss}</Typography>
-                           <Typography sx={dbChartDataCurrency}>{chartData.lossCurrency}</Typography>
-                        </CardContent>
-                     ))}
-                  </Card>
+            <Paper sx={dbChartLayout}>
+               <Typography sx={dbKPIName}>All Income & Expenses</Typography>
+               <Divider />
+               <Box sx={dbChart}>
+                  <Box sx={dbBarChart}>
+                     <Bar data={barChartData} />
+                     <Typography sx={dbChartYear}>Year 2024</Typography>
+                  </Box>
+                  <Box sx={dbChartDataLayout}>
+                     <Card sx={dbChartData}>
+                        {dbChartDataContent.map((chartData) => (
+                           <CardContent>
+                              <Typography sx={dbChartDataYear}>{chartData.month}</Typography>
+                              <Typography sx={dbChartDataName}>{chartData.income}</Typography>
+                              <Typography sx={dbChartDataCurrency}>{chartData.incomeCurrency}</Typography>
+                              <Typography sx={dbChartDataName}>{chartData.expenses}</Typography>
+                              <Typography sx={dbChartDataCurrency}>{chartData.expensesCurrency}</Typography>
+                              <Typography sx={dbChartDataName}>{chartData.profit}</Typography>
+                              <Typography sx={dbChartDataCurrency}>{chartData.profitCurrency}</Typography>
+                              <Typography sx={dbChartDataName}>{chartData.loss}</Typography>
+                              <Typography sx={dbChartDataCurrency}>{chartData.lossCurrency}</Typography>
+                           </CardContent>
+                        ))}
+                     </Card>
+                  </Box>
                </Box>
             </Paper>
 
             <Paper sx={dbRecentTable}>
-               {/* <Typography>Recent Details</Typography> */}
+               <Typography sx={dbKPIName}>Recent Details</Typography>
+               <Divider />
                <TableContainer>
                   <Table>
                      <TableHead>
@@ -143,7 +149,7 @@ const Homepage = () => {
                      </TableHead>
 
                      <TableBody>
-                        {dbRecentTableContent.map((rtc, index) => (
+                        {mwData.map((rtc, index) => (
                            <TableRow key={index}>
                               <TableCell sx={dbRtTableBodyCell}>{rtc.num}</TableCell>
                               <TableCell sx={dbRtTableBodyCell}>{rtc.date}</TableCell>
@@ -156,6 +162,10 @@ const Homepage = () => {
                      </TableBody>
                   </Table>
                </TableContainer>
+               <Box sx={tablePagination}>
+                  <Typography sx={tablePaginationText}>Showing 1 to 10 of 100 Entries</Typography>
+                  <Pagination count={10} />
+               </Box>
                {/* <TablePagination
                   component="div"
                   count={100}

@@ -1,5 +1,5 @@
 export const signUpLayout = {
-   border: '1px solid red',
+   // border: '1px solid red',
    display: 'flex',
    alignItems: 'center',
    justifyContent: 'center',

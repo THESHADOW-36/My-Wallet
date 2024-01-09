@@ -1,5 +1,5 @@
 export const expenses = {
-   padding: '20px'
+   padding: { xs: '10px 4px', sm: '20px' }
 }
 
 
@@ -25,9 +25,8 @@ export const expRecTableTitle = {
 
 export const expTopHeader = {
    width: '95%',
-   margin: '20px auto 0px',
+   margin: '10px auto 0px',
    display: 'flex',
-   flexDirection: { xs: 'column', sm: 'row' },
    justifyContent: 'space-between',
    alignItems: 'center'
 }
@@ -42,18 +41,44 @@ export const expTitle = {
 
 
 export const expTextField = {
+   backgroundColor: 'rgb(245, 245, 245)',
    width: { xs: '200px', sm: '244px' },
-   '& .MuiInputBase-root': { height: { xs: '34px', sm: '40', md: '34px' }, fontSize: { xs: '14px', sm: '18px', md: '14px' } },
+   '& .MuiInputBase-root': { height: { xs: '36px', sm: '40', md: '36px' }, fontSize: { xs: '14px', sm: '18px', md: '14px' } },
 }
 
-export const expButton = {
+export const expAddButton = {
    // height: '100%',
+   // backgroundColor: '#191919',
+   // color: '#191919',
    fontSize: { xs: '14px', sm: '18px', md: '13px' },
    textTransform: 'capitalize',
    height: { xs: '34px', sm: '40', md: '34px' },
    letterSpacing: '0.5px',
-   paddingRight: '30px',
-   paddingLeft: '20px'
+   padding: { xs: '6px 30px 6px 20px', sm: '6px 30px 6px 20px' },
+}
+
+export const addExpDialog = {
+   '& .MuiPaper-root': {
+      width: { xs: '90%', sm: '30%' },
+      margin: 'auto'
+   }
+}
+
+export const addExpDialogTitle = {
+   textAlign: 'center'
+}
+
+export const addExpDiaTextFieldLay = {
+   padding: '0px 10px'
+}
+export const addExpDiaTextField = {
+   width: '100%',
+   margin: '10px 0px'
+}
+
+export const addExpDialogAction = {
+   justifyContent: 'space-between',
+   padding: '8px 22px 16px'
 }
 
 export const expRecentTableContainer = {
@@ -69,16 +94,25 @@ export const expTableContent = {
    margin: '20px auto'
 }
 
+export const expRtTableHeadRow = {
+   backgroundColor: 'rgb(222, 222, 222)'
+}
+
 export const expRtTableHeadCell = {
    // border: '1px solid red',
    textWrap: 'nowrap',
    padding: '12px 16px'
 }
 
+export const expRtTableBodyRow = {
+   borderBottom: '2px solid rgb(222, 222, 222)',
+   backgroundColor: 'rgb(245, 245, 245)'
+}
+
 export const expRtTableBodyCell = {
    // border: '1px solid red',
    textWrap: 'nowrap',
-   padding: '10px 18px'
+   padding: '6px 18px'
 }
 
 export const tablePagination = {

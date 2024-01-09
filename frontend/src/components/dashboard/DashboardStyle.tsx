@@ -151,6 +151,33 @@ export const dbRecentTable = {
    marginTop: '20px'
 }
 
+
+export const dbRecentTableContainer = {
+   // border: '1px solid gray',
+   padding: '10px 0px 1px'
+}
+
+export const dbTopHeader = {
+   width: '95%',
+   margin: '10px auto 0px',
+   display: 'flex',
+   justifyContent: 'flex-end',
+   alignItems: 'center'
+}
+
+export const dbTextField = {
+   width: { xs: '200px', sm: '244px' },
+   '& .MuiInputBase-root': { height: { xs: '34px', sm: '40', md: '34px' }, fontSize: { xs: '14px', sm: '18px', md: '14px' } },
+}
+
+export const dbTableContent = {
+   // border: '1px solid gray',
+   boxShadow: '0px 0px 4px 0px gray',
+   borderRadius: '4px',
+   width: '96%',
+   margin: '20px auto'
+}
+
 export const dbRtTableHeadCell = {
    textWrap: 'nowrap',
    padding: '12px 16px'

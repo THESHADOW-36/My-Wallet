@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Box, Card, CardContent, Divider, Grid, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
-import { dashboard, dbChart, dbBarChart, dbChartData, dbChartDataCurrency, dbChartDataLayout, dbChartDataName, dbChartDataYear, dbChartYear, dbKPICash, dbKPIName, dbKPIPaper, dbKPIProgress, dbRecentTable, mwContent, dbRtTableHeadCell, dbRtTableBodyCell, dbKPIContent, dbKPIDetails, dbKPIIcon1, dbKPIIcon2, dbKPIIcon3, dbChartLayout, tablePagination, tablePaginationText } from './DashboardStyle'
+import { Box, Button, Card, CardContent, Divider, Grid, InputAdornment, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from '@mui/material'
+import { dashboard, dbChart, dbBarChart, dbChartData, dbChartDataCurrency, dbChartDataLayout, dbChartDataName, dbChartDataYear, dbChartYear, dbKPICash, dbKPIName, dbKPIPaper, dbKPIProgress, dbRecentTable, mwContent, dbRtTableHeadCell, dbRtTableBodyCell, dbKPIContent, dbKPIDetails, dbKPIIcon1, dbKPIIcon2, dbKPIIcon3, dbChartLayout, tablePagination, tablePaginationText, dbRecentTableContainer, dbTopHeader, dbTextField, dbTableContent } from './DashboardStyle'
 import { Bar } from 'react-chartjs-2'
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js'
 import { barChartExpensesData, barChartIncomeData, barChartLabels, dbChartDataContent, mwKPIData } from "../data/DbData";
-import { AccountBalanceTwoTone, CurrencyExchangeTwoTone, DataSaverOnTwoTone } from "@mui/icons-material";
+import { AccountBalanceTwoTone, AddCircleTwoTone, CurrencyExchangeTwoTone, DataSaverOnTwoTone, Search } from "@mui/icons-material";
 import { mwData } from "../data/MyWalletData";
 
 ChartJS.register(
@@ -135,36 +135,50 @@ const Homepage = () => {
             <Paper sx={dbRecentTable}>
                <Typography sx={dbKPIName}>Recent Details</Typography>
                <Divider />
-               <TableContainer>
-                  <Table>
-                     <TableHead>
-                        <TableRow>
-                           <TableCell sx={dbRtTableHeadCell}>Sr.No.</TableCell>
-                           <TableCell sx={dbRtTableHeadCell}>Date</TableCell>
-                           <TableCell sx={dbRtTableHeadCell}>Name</TableCell>
-                           <TableCell sx={dbRtTableHeadCell}>Category</TableCell>
-                           <TableCell sx={dbRtTableHeadCell}>Expenses (₹)</TableCell>
-                           <TableCell sx={dbRtTableHeadCell}>Payment Method</TableCell>
-                        </TableRow>
-                     </TableHead>
+               <Box sx={dbRecentTableContainer}>
+                  {/* <Box sx={dbTopHeader}>
+                     <TextField sx={dbTextField}
+                        InputProps={{
+                           endAdornment: (
+                              <InputAdornment position='end'>
+                                 <Search sx={{ fontSize: { xs: '20px', sm: '26px', md: '20px' } }} />
+                              </InputAdornment>)
+                        }}
+                        size='small' placeholder='Search...' />
+                  </Box> */}
+                  <Box sx={dbTableContent}>
+                     <TableContainer>
+                        <Table>
+                           <TableHead>
+                              <TableRow>
+                                 <TableCell sx={dbRtTableHeadCell}>Sr.No.</TableCell>
+                                 <TableCell sx={dbRtTableHeadCell}>Date</TableCell>
+                                 <TableCell sx={dbRtTableHeadCell}>Name</TableCell>
+                                 <TableCell sx={dbRtTableHeadCell}>Category</TableCell>
+                                 <TableCell sx={dbRtTableHeadCell}>Expenses (₹)</TableCell>
+                                 <TableCell sx={dbRtTableHeadCell}>Payment Method</TableCell>
+                              </TableRow>
+                           </TableHead>
 
-                     <TableBody>
-                        {mwData.map((rtc, index) => (
-                           <TableRow key={index}>
-                              <TableCell sx={dbRtTableBodyCell}>{rtc.num}</TableCell>
-                              <TableCell sx={dbRtTableBodyCell}>{rtc.date}</TableCell>
-                              <TableCell sx={dbRtTableBodyCell}>{rtc.name}</TableCell>
-                              <TableCell sx={dbRtTableBodyCell}>{rtc.category}</TableCell>
-                              <TableCell sx={dbRtTableBodyCell}>{rtc.expenses}</TableCell>
-                              <TableCell sx={dbRtTableBodyCell}>{rtc.method}</TableCell>
-                           </TableRow>
-                        ))}
-                     </TableBody>
-                  </Table>
-               </TableContainer>
-               <Box sx={tablePagination}>
-                  <Typography sx={tablePaginationText}>Showing 1 to 10 of 100 Entries</Typography>
-                  <Pagination count={10} />
+                           <TableBody>
+                              {mwData.map((rtc, index) => (
+                                 <TableRow key={index}>
+                                    <TableCell sx={dbRtTableBodyCell}>{rtc.num}</TableCell>
+                                    <TableCell sx={dbRtTableBodyCell}>{rtc.date}</TableCell>
+                                    <TableCell sx={dbRtTableBodyCell}>{rtc.name}</TableCell>
+                                    <TableCell sx={dbRtTableBodyCell}>{rtc.category}</TableCell>
+                                    <TableCell sx={dbRtTableBodyCell}>{rtc.expenses}</TableCell>
+                                    <TableCell sx={dbRtTableBodyCell}>{rtc.method}</TableCell>
+                                 </TableRow>
+                              ))}
+                           </TableBody>
+                        </Table>
+                     </TableContainer>
+                     <Box sx={tablePagination}>
+                        <Typography sx={tablePaginationText}>Showing 1 to 10 of 100 Entries</Typography>
+                        <Pagination count={10} />
+                     </Box>
+                  </Box>
                </Box>
                {/* <TablePagination
                   component="div"

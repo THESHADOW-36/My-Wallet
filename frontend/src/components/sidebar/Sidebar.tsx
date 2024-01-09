@@ -1,8 +1,7 @@
 import { Avatar, Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material'
 import { dProAvatar, dProEmail, dProName, dProfile, dSidebarContentButton, dSidebarContentName, drawer, mdListButton, mdListIcon, mdProfile, miniDrawer } from './SidebarStyle'
-import { sbList1 } from '../data/SidebarData'
+import { sbList1 } from '../../pages/data/SidebarData'
 import { useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
 
 
 interface sbToggle {

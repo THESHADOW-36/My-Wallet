@@ -1,7 +1,6 @@
-import { Box, Button, Checkbox, FormControl, FormControlLabel, IconButton, Input, InputAdornment, InputLabel, MenuItem, Paper, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import { Box, Button, Checkbox, FormControlLabel, InputLabel, Paper, TextField, Typography } from '@mui/material'
 import { inputColon, inputLabel, inputLayout, inputTextField, signUp, signUpLayout, signUpTitle, suNavToSignIn, suSubmitLayout } from './SignUpStyle'
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+// import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {

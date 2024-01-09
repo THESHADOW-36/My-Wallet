@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Box, Button, Card, CardContent, Divider, Grid, InputAdornment, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from '@mui/material'
-import { dashboard, dbChart, dbBarChart, dbChartData, dbChartDataCurrency, dbChartDataLayout, dbChartDataName, dbChartDataYear, dbChartYear, dbKPICash, dbKPIName, dbKPIPaper, dbKPIProgress, dbRecentTable, mwContent, dbRtTableHeadCell, dbRtTableBodyCell, dbKPIContent, dbKPIDetails, dbKPIIcon1, dbKPIIcon2, dbKPIIcon3, dbChartLayout, tablePagination, tablePaginationText, dbRecentTableContainer, dbTopHeader, dbTextField, dbTableContent } from './DashboardStyle'
+import { Box, Card, CardContent, Divider, Grid, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { dashboard, dbChart, dbBarChart, dbChartData, dbChartDataCurrency, dbChartDataLayout, dbChartDataName, dbChartDataYear, dbChartYear, dbKPICash, dbKPIName, dbKPIPaper, dbRecentTable, mwContent, dbRtTableHeadCell, dbRtTableBodyCell, dbKPIContent, dbKPIDetails, dbKPIIcon1, dbKPIIcon2, dbKPIIcon3, dbChartLayout, tablePagination, tablePaginationText, dbRecentTableContainer, dbTableContent } from './DashboardStyle'
 import { Bar } from 'react-chartjs-2'
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js'
-import { barChartExpensesData, barChartIncomeData, barChartLabels, dbChartDataContent, mwKPIData } from "../data/DbData";
-import { AccountBalanceTwoTone, AddCircleTwoTone, CurrencyExchangeTwoTone, DataSaverOnTwoTone, Search } from "@mui/icons-material";
+import { barChartExpensesData, barChartIncomeData, barChartLabels, dbChartDataContent } from "../data/DbData";
+import { AccountBalanceTwoTone, CurrencyExchangeTwoTone, DataSaverOnTwoTone } from "@mui/icons-material";
 import { mwData } from "../data/MyWalletData";
 
 ChartJS.register(
@@ -27,8 +27,8 @@ const Homepage = () => {
    //    }, 800)
    // }, [])
 
+   
    // eslint-disable-next-line
-
    const [barChartData, setBarChartData] = useState({
       labels: barChartLabels,
       datasets: [

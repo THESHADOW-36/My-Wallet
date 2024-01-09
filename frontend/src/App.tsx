@@ -2,12 +2,12 @@
 // import './App.css';
 import React from 'react';
 import { Routes, Route } from "react-router-dom";
-import Homepage from "./components/dashboard/Dashboard";
+import Homepage from "./pages/dashboard/Dashboard";
 import { Box } from '@mui/material';
-import SignUp from './components/signUp/SignUp';
-import SignIn from './components/signIn/SignIn';
-import Expenses from './components/expenses/Expenses';
-import Income from './components/income/Income';
+import SignUp from './pages/signUp/SignUp';
+import SignIn from './pages/signIn/SignIn';
+import Expenses from './pages/expenses/Expenses';
+import Income from './pages/income/Income';
 
 interface mainProps {
   loggedIn: any,

@@ -1,6 +1,6 @@
 import { AppBar, Box, IconButton, TextField, Toolbar, Typography } from '@mui/material'
 import { Menu, MoreVertTwoTone } from '@mui/icons-material'
-import { WalletLogo } from '../Logo'
+import { WalletLogo } from '../../Logo'
 import { appBar, logoLayout, logoText, menuBarLogo, menuDotLogo, searchBar, toolBar } from './NavbarStyle'
 
 

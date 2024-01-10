@@ -73,7 +73,10 @@ export const addExpDiaTextFieldLay = {
 }
 export const addExpDiaTextField = {
    width: '100%',
-   margin: '10px 0px'
+   margin: '6px 0px',
+   // '& .MuiInputBase-input:invalid ~ & .MuiFormHelperText-root': {
+   //    display: 'none'
+   // }
 }
 
 export const addExpDialogAction = {

@@ -5,7 +5,7 @@ import { Bar } from 'react-chartjs-2'
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js'
 import { barChartExpensesData, barChartIncomeData, barChartLabels, dbChartDataContent } from "../data/DbData";
 import { AccountBalanceTwoTone, CurrencyExchangeTwoTone, DataSaverOnTwoTone } from "@mui/icons-material";
-import { mwData } from "../data/MyWalletData";
+import { mwExpData } from "../data/MyWalletData";
 
 ChartJS.register(
    CategoryScale,
@@ -161,7 +161,7 @@ const Homepage = () => {
                            </TableHead>
 
                            <TableBody>
-                              {mwData.map((rtc, index) => (
+                              {mwExpData.map((rtc, index) => (
                                  <TableRow key={index}>
                                     <TableCell sx={dbRtTableBodyCell}>{rtc.num}</TableCell>
                                     <TableCell sx={dbRtTableBodyCell}>{rtc.date}</TableCell>

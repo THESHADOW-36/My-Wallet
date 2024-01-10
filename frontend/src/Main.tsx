@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Box } from '@mui/material'
-import App from '../App'
-import Navbar from '../components/navbar/Navbar'
-import Sidebar from '../components/sidebar/Sidebar'
+import App from './App'
+import Navbar from './components/navbar/Navbar'
+import Sidebar from './components/sidebar/Sidebar'
 
 
 const mainStyle = {

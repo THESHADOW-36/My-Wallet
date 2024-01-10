@@ -1,20 +1,21 @@
+import React from "react";
 // import { Observable } from 'rxjs';
 
-const pro = new Promise((resolve) => {
-   console.log('Pro1')
+// const pro = new Promise((resolve) => {
+//    console.log('Pro1')
 
-   setTimeout(() => {
-      resolve('Pro2')
-   }, 2000);
+//    setTimeout(() => {
+//       resolve('Pro2')
+//    }, 2000);
 
-   setTimeout(() => {
-      resolve('Pro3')
-   }, 3000);
-})
+//    setTimeout(() => {
+//       resolve('Pro3')
+//    }, 3000);
+// })
 
-setTimeout(() => {
-   pro.then((data) => { console.log(data) })
-}, 3000);
+// setTimeout(() => {
+//    pro.then((data) => { console.log(data) })
+// }, 3000);
 
 
 

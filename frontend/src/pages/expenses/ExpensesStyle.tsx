@@ -58,6 +58,20 @@ export const expAddButton = {
 }
 
 export const addExpDialog = {
+   // body::-webkit-scrollbar {
+   //    width: 14px;
+   //  }
+
+   //  body::-webkit-scrollbar-track {
+   //    background-color: rgb(15, 15, 15);
+   //  }
+
+   //  body::-webkit-scrollbar-thumb {
+   //    border: 3px solid rgb(15, 15, 15);
+   //    background-color: rgb(160, 160, 160);
+   //    border-radius: 50px;
+   //    height: 56px;
+   //  }
    '& .MuiPaper-root': {
       width: { xs: '90%', sm: '30%' },
       margin: 'auto'

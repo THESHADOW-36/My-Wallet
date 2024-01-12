@@ -2,9 +2,18 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider
 import { addExpDiaTextField, addExpDiaTextFieldLay, addExpDialog, addExpDialogAction, addExpDialogTitle, expAddButton, expRecTableTitle, expRecentTable, expRecentTableContainer, expRtTableBodyCell, expRtTableBodyRow, expRtTableHeadCell, expRtTableHeadRow, expTableContent, expTextField, expTopHeader, expenses, tablePagination, tablePaginationText } from './ExpensesStyle'
 import { mwExpData } from '../data/MyWalletData'
 import { AddCircleTwoTone, DeleteForeverTwoTone, EditTwoTone, Search } from '@mui/icons-material'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-interface errExp {
+
+interface ExpData {
+   date: string;
+   name: string;
+   category: string;
+   amount: string;
+   payment: string;
+}
+
+interface ErrExp {
    date: boolean,
    name: boolean,
    category: boolean,
@@ -12,39 +21,17 @@ interface errExp {
    payment: boolean
 }
 
-const Expenses = () => {
-   const [expData, setExpData] = useState({ date: '', name: '', category: '', amount: '', payment: '' })
-   const [errorExpenses, setErrorExpenses] = useState<errExp>({ date: false, name: false, category: false, amount: false, payment: false });
+
+const Expenses: React.FC = () => {
+   const [expData, setExpData] = useState<ExpData>({ date: '', name: '', category: '', amount: '', payment: '' })
+   const [errorExpenses, setErrorExpenses] = useState<ErrExp>({ date: false, name: false, category: false, amount: false, payment: false });
    const [addExpenses, setAddExpenses] = useState(false);
    const [editExpenses, setEditExpenses] = useState(false);
    // console.log(expData)
-   // console.log(errorExpenses)
+   // console.log('errorExpenses', errorExpenses)
 
-   const dateHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setExpData({ ...expData, date: event.target.value })
-      handleBlurData()
-   }
-   
-   const nameHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setExpData({ ...expData, name: event.target.value })
-      // handleBlurName()
-   }
-   console.log(expData.name)
-   console.log(errorExpenses.name)
-
-   const categoryHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setExpData({ ...expData, category: event.target.value })
-      handleBlurCategory();
-   }
-
-   const amountHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setExpData({ ...expData, amount: event.target.value })
-      handleBlurAmount();
-   }
-
-   const paymentHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setExpData({ ...expData, payment: event.target.value })
-      handleBlurPayment();
+   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setExpData({ ...expData, [event.target.name]: event.target.value })
    }
 
    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -52,70 +39,53 @@ const Expenses = () => {
       if (expData.date && expData.name && expData.category && expData.amount && expData.payment) {
          alert('Successfull')
          setExpData({ date: '', name: '', category: '', amount: '', payment: '' })
-      }
-
-
-      if (!expData.date) {
-         console.log("date")
       } else {
-         console.log("!date")
-      }
-      if (!expData.name || !expData.name.length) {
-         setErrorExpenses({ ...errorExpenses, name: true })
-         console.log("name")
-      } else {
-         console.log("!name")
-      }
-      if (!expData.category || !expData.category.length) {
-         setErrorExpenses({ ...errorExpenses, category: true })
-         console.log("cat")
-      } else {
-         console.log("!cat")
+         if (!expData.date) {
+            errorExpenses.date = true;
+         } else {
+            errorExpenses.date = false;
+         }
+         if (!expData.name) {
+            errorExpenses.name = true;
+         } else {
+            errorExpenses.name = false;
+         }
+         if (!expData.category) {
+            errorExpenses.category = true;
+         } else {
+            errorExpenses.category = false;
+         }
+         if (!expData.amount) {
+            errorExpenses.amount = true;
+         } else {
+            errorExpenses.amount = false;
+         }
+         if (!expData.payment) {
+            errorExpenses.payment = true;
+         } else {
+            errorExpenses.payment = false;
+         }
+         setErrorExpenses({ ...errorExpenses });
       }
    }
 
-   // console.log(' Object.keys(expData)', Object.keys(expData))
-
-   const handleBlurData = () => {
-      if (!expData.date) {
-         setErrorExpenses({ ...errorExpenses, date: true })
+   const handleBlur = (title: keyof ExpData) => {
+      console.log('handleBlurTitle', title)
+      if (!expData[title]) {
+         setErrorExpenses({ ...errorExpenses, [title]: true })
       } else {
-         setErrorExpenses({ ...errorExpenses, date: false })
+         setErrorExpenses({ ...errorExpenses, [title]: false })
       }
    }
 
-   const handleBlurName = () => {
-      if (!expData.name) {
-         setErrorExpenses({ ...errorExpenses, name: true })
-      } else {
-         setErrorExpenses({ ...errorExpenses, name: false })
-      }
-   }
-
-   const handleBlurCategory = () => {
-      if (!expData.category) {
-         setErrorExpenses({ ...errorExpenses, category: true })
-      } else {
-         setErrorExpenses({ ...errorExpenses, category: false })
-      }
-   }
-
-   const handleBlurAmount = () => {
-      if (!expData.amount) {
-         setErrorExpenses({ ...errorExpenses, amount: true })
-      } else {
-         setErrorExpenses({ ...errorExpenses, amount: false })
-      }
-   }
-
-   const handleBlurPayment = () => {
-      if (!expData.payment) {
-         setErrorExpenses({ ...errorExpenses, payment: true })
-      } else {
-         setErrorExpenses({ ...errorExpenses, payment: false })
-      }
-   }
-
+   // HandleBlur Structure...
+   // const handleBlurName = () => {
+   //    if (!expData.name) {
+   //       setErrorExpenses({ ...errorExpenses, name: true })
+   //    } else {
+   //       setErrorExpenses({ ...errorExpenses, name: false })
+   //    }
+   // }
    return (
       <Box sx={expenses}>
          <Paper sx={expRecentTable}>
@@ -146,10 +116,11 @@ const Expenses = () => {
                                  label="Date"
                                  name='date'
                                  type='date'
-                                 onChange={dateHandler}
+                                 onChange={handleChange}
                                  value={expData.date}
                                  error={errorExpenses.date}
-                                 onBlur={handleBlurData}
+                                 onBlur={() => handleBlur('date')}
+                                 onInput={() => handleBlur('date')}
                                  InputLabelProps={{
                                     shrink: true,
                                  }}
@@ -162,11 +133,11 @@ const Expenses = () => {
                                  label="Name"
                                  name='name'
                                  type='text'
-                                 onChange={nameHandler}
+                                 onChange={handleChange}
                                  value={expData.name}
                                  error={errorExpenses.name}
-                                 onBlur={handleBlurName}
-                                 onInput={handleBlurName}
+                                 onBlur={() => handleBlur('name')}
+                                 onInput={() => handleBlur('name')}
                                  placeholder='Eg. Television, Pen Box, Paracetamol...'
                                  helperText={errorExpenses.name && 'Enter your full name'} />
                               <TextField
@@ -176,10 +147,11 @@ const Expenses = () => {
                                  label="Category"
                                  name='category'
                                  type='text'
-                                 onChange={categoryHandler}
+                                 onChange={handleChange}
                                  value={expData.category}
                                  error={errorExpenses.category}
-                                 onBlur={handleBlurCategory}
+                                 onBlur={() => handleBlur('category')}
+                                 onInput={() => handleBlur('category')}
                                  placeholder='Eg. Electronics, Stationary, Medicine...'
                                  helperText={errorExpenses.category && 'Enter the category type'} />
                               <TextField
@@ -189,10 +161,11 @@ const Expenses = () => {
                                  label="Amount"
                                  name='amount'
                                  type='number'
-                                 onChange={amountHandler}
+                                 onChange={handleChange}
                                  value={expData.amount}
                                  error={errorExpenses.amount}
-                                 onBlur={handleBlurAmount}
+                                 onBlur={() => handleBlur('amount')}
+                                 onInput={() => handleBlur('amount')}
                                  placeholder='Eg. 35,999'
                                  helperText={errorExpenses.amount && 'Enter the price of the item'} />
                               <TextField
@@ -202,10 +175,11 @@ const Expenses = () => {
                                  label="Payment Method"
                                  name='payment'
                                  type='text'
-                                 onChange={paymentHandler}
+                                 onChange={handleChange}
                                  value={expData.payment}
                                  error={errorExpenses.payment}
-                                 onBlur={handleBlurPayment}
+                                 onBlur={() => handleBlur('payment')}
+                                 onInput={() => handleBlur('payment')}
                                  placeholder='Eg. Credit, Debit, Cash, UPI'
                                  helperText={errorExpenses.payment && 'Enter the Method of Payment'} />
                            </Box>

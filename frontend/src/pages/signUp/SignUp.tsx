@@ -8,16 +8,30 @@ import axios from 'axios';
 
 
 interface UsData {
-   name: string;
+   firstName: string;
+   lastName: string;
+   userName: string;
+   dob: string;
    email: string;
    password: string;
-   role: string;
+   confirmPassword: string;
+}
+
+interface ErrData {
+   firstName: boolean;
+   lastName: boolean;
+   userName: boolean;
+   dob: boolean;
+   email: boolean;
+   password: boolean;
+   confirmPassword: boolean;
 }
 
 const SignUp = () => {
 
-   const [userData, setUserData] = useState<UsData>({ name: '', email: '', password: '', role: '' });
+   const [userData, setUserData] = useState<UsData>({ firstName: '', lastName: '', userName: '', dob: '', email: '', password: '', confirmPassword: '' });
    console.log(userData)
+   const [errorData, setErrorData] = useState<ErrData>({ firstName: false, lastName: false, userName: false, dob: false, email: false, password: false, confirmPassword: false })
 
    const router = useNavigate();
 
@@ -30,9 +44,29 @@ const SignUp = () => {
    }
 
 
+   // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+   //    event.preventDefault();
+   //    if (userData.name && userData.email && userData.password && userData.role) {
+   //       try {
+   //          console.log('Submitted Data :', userData);
+   //          const response = await axios.post('http://localhost:5000/api/v1/auth/register', { userData });
+   //          console.log('Submitted res :', response);
+   //          console.log(response);
+   //          if (response) {
+   //             alert('Successfull')
+   //             setUserData({ name: '', email: '', password: '', role: '' })
+   //          }
+   //       } catch (error) {
+   //          console.log(error)
+   //       }
+   //    } else {
+   //       alert('Error')
+   //    }
+   // }
+
    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      if (userData.name && userData.email && userData.password && userData.role) {
+      if (userData.firstName && userData.lastName && userData.userName && userData.dob && userData.email && userData.password && userData.confirmPassword) {
          try {
             console.log('Submitted Data :', userData);
             const response = await axios.post('http://localhost:5000/api/v1/auth/register', { userData });
@@ -40,13 +74,57 @@ const SignUp = () => {
             console.log(response);
             if (response) {
                alert('Successfull')
-               setUserData({ name: '', email: '', password: '', role: '' })
+               setUserData({ firstName: '', lastName: '', userName: '', dob: '', email: '', password: '', confirmPassword: '' })
             }
          } catch (error) {
             console.log(error)
          }
       } else {
          alert('Error')
+         if (!userData.firstName) {
+            errorData.firstName = true;
+         } else {
+            errorData.firstName = false;
+         }
+         if (!userData.lastName) {
+            errorData.lastName = true;
+         } else {
+            errorData.lastName = false;
+         }
+         if (!userData.userName) {
+            errorData.userName = true;
+         } else {
+            errorData.userName = false;
+         }
+         if (!userData.dob) {
+            errorData.dob = true;
+         } else {
+            errorData.dob = false;
+         }
+         if (!userData.email) {
+            errorData.email = true;
+         } else {
+            errorData.email = false;
+         }
+         if (!userData.password) {
+            errorData.password = true;
+         } else {
+            errorData.password = false;
+         }
+         if (!userData.confirmPassword) {
+            errorData.confirmPassword = true;
+         } else {
+            errorData.confirmPassword = false;
+         }
+         setErrorData({ ...errorData });
+      }
+   }
+
+   const handleError = (title: keyof UsData) => {
+      if (!userData[title]) {
+         setErrorData({ ...errorData, [title]: true })
+      } else {
+         setErrorData({ ...errorData, [title]: false })
       }
    }
 
@@ -57,31 +135,77 @@ const SignUp = () => {
 
             <form onSubmit={handleSubmit}>
                <Box sx={inputLayout}>
-                  <InputLabel sx={inputLabel} required>Name</InputLabel>
+                  <InputLabel sx={inputLabel} required>First Name</InputLabel>
                   <Box sx={inputColon}>:</Box>
                   <TextField sx={inputTextField}
                      InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
                      id="outlined-basic"
                      variant="outlined"
-                     name='name'
+                     name='firstName'
                      type='text'
-                     value={userData.name}
+                     value={userData.firstName}
+                     error={errorData.firstName}
+                     onBlur={() => handleError('firstName')}
+                     onInput={() => handleError('firstName')}
                      onChange={handleChange}
-                  />
+                     placeholder='First Name' 
+                     helperText={errorData.firstName && 'Error'}/>
                </Box>
+
                <Box sx={inputLayout}>
-                  <InputLabel sx={inputLabel} required>Role</InputLabel>
+                  <InputLabel sx={inputLabel} required>Last Name</InputLabel>
                   <Box sx={inputColon}>:</Box>
                   <TextField sx={inputTextField}
                      InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
                      id="outlined-basic"
                      variant="outlined"
-                     name='role'
+                     name='lastName'
                      type='text'
-                     value={userData.role}
+                     value={userData.lastName}
+                     error={errorData.lastName}
+                     onBlur={() => handleError('lastName')}
+                     onInput={() => handleError('lastName')}
                      onChange={handleChange}
-                  />
+                     placeholder='Last Name' 
+                     helperText={errorData.lastName && 'Error'}/>
                </Box>
+
+               <Box sx={inputLayout}>
+                  <InputLabel sx={inputLabel} required>User Name</InputLabel>
+                  <Box sx={inputColon}>:</Box>
+                  <TextField sx={inputTextField}
+                     InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
+                     id="outlined-basic"
+                     variant="outlined"
+                     name='userName'
+                     type='text'
+                     value={userData.userName}
+                     error={errorData.userName}
+                     onBlur={() => handleError('userName')}
+                     onInput={() => handleError('userName')}
+                     onChange={handleChange}
+                     placeholder='User Name' 
+                     helperText={errorData.userName && 'Error'}/>
+               </Box>
+
+               <Box sx={inputLayout}>
+                  <InputLabel sx={inputLabel} required>Date Of Birth</InputLabel>
+                  <Box sx={inputColon}>:</Box>
+                  <TextField sx={inputTextField}
+                     InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
+                     id="outlined-basic"
+                     variant="outlined"
+                     name='dob'
+                     type='date'
+                     value={userData.dob}
+                     error={errorData.dob}
+                     onBlur={() => handleError('dob')}
+                     onInput={() => handleError('dob')}
+                     onChange={handleChange}
+                     placeholder='DOB' 
+                     helperText={errorData.dob && 'Error'}/>
+               </Box>
+
                <Box sx={inputLayout}>
                   <InputLabel sx={inputLabel} required>Email</InputLabel>
                   <Box sx={inputColon}>:</Box>
@@ -92,9 +216,14 @@ const SignUp = () => {
                      name='email'
                      type='text'
                      value={userData.email}
+                     error={errorData.email}
+                     onBlur={() => handleError('email')}
+                     onInput={() => handleError('email')}
                      onChange={handleChange}
-                  />
+                     placeholder='Email' 
+                     helperText={errorData.email && 'Error'}/>
                </Box>
+
                <Box sx={inputLayout}>
                   <InputLabel sx={inputLabel} required>Password</InputLabel>
                   <Box sx={inputColon}>:</Box>
@@ -105,51 +234,31 @@ const SignUp = () => {
                      name='password'
                      type='text'
                      value={userData.password}
+                     error={errorData.password}
+                     onBlur={() => handleError('password')}
+                     onInput={() => handleError('password')}
                      onChange={handleChange}
-                  />
+                     placeholder='Password' 
+                     helperText={errorData.password && 'Error'}/>
                </Box>
 
-               {/* <Box sx={inputLayout}>
-               <InputLabel sx={inputLabel} required>First Name</InputLabel>
-               <Box sx={inputColon}>:</Box>
-               <TextField sx={inputTextField} InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }} placeholder='First Name' />
-            </Box>
-
-            <Box sx={inputLayout}>
-               <InputLabel sx={inputLabel} required>Last Name</InputLabel>
-               <Box sx={inputColon}>:</Box>
-               <TextField sx={inputTextField} InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }} placeholder='Last Name' />
-            </Box>
-
-            <Box sx={inputLayout}>
-               <InputLabel sx={inputLabel} required>User Name</InputLabel>
-               <Box sx={inputColon}>:</Box>
-               <TextField sx={inputTextField} InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }} placeholder='User Name' />
-            </Box>
-
-            <Box sx={inputLayout}>
-               <InputLabel sx={inputLabel} required>Date Of Birth</InputLabel>
-               <Box sx={inputColon}>:</Box>
-               <TextField sx={inputTextField} InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }} placeholder='DOB' />
-            </Box>
-
-            <Box sx={inputLayout}>
-               <InputLabel sx={inputLabel} required>Email</InputLabel>
-               <Box sx={inputColon}>:</Box>
-               <TextField sx={inputTextField} InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }} placeholder='Email' />
-            </Box>
-
-            <Box sx={inputLayout}>
-               <InputLabel sx={inputLabel} required>Password</InputLabel>
-               <Box sx={inputColon}>:</Box>
-               <TextField sx={inputTextField} InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }} placeholder='Password' />
-            </Box>
-
-            <Box sx={inputLayout}>
-               <InputLabel sx={inputLabel} required>Confirm Password</InputLabel>
-               <Box sx={inputColon}>:</Box>
-               <TextField sx={inputTextField} InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }} placeholder='Confirm Password' />
-            </Box> */}
+               <Box sx={inputLayout}>
+                  <InputLabel sx={inputLabel} required>Confirm Password</InputLabel>
+                  <Box sx={inputColon}>:</Box>
+                  <TextField sx={inputTextField}
+                     InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
+                     id="outlined-basic"
+                     variant="outlined"
+                     name='confirmPassword'
+                     type='text'
+                     value={userData.confirmPassword}
+                     error={errorData.confirmPassword}
+                     onBlur={() => handleError('confirmPassword')}
+                     onInput={() => handleError('confirmPassword')}
+                     onChange={handleChange}
+                     placeholder='Confirm Password' 
+                     helperText={errorData.confirmPassword && 'Error'}/>
+               </Box>
 
                <FormControlLabel control={<Checkbox defaultChecked />} label="I have read and agree to Terms and Conditions" />
 

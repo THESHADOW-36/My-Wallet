@@ -2,8 +2,22 @@ import { Box, Button, Checkbox, FormControlLabel, InputLabel, Paper, TextField, 
 import { inputColon, inputLabel, inputLayout, inputTextField, signUp, signUpLayout, signUpTitle, suNavToSignIn, suSubmitLayout } from './SignUpStyle'
 // import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
+
+
+
+interface UsData {
+   name: string;
+   email: string;
+   password: string;
+   role: string;
+}
 
 const SignUp = () => {
+
+   const [userData, setUserData] = useState<UsData>({ name: '', email: '', password: '', role: '' });
+   console.log(userData)
 
    const router = useNavigate();
 
@@ -11,11 +25,91 @@ const SignUp = () => {
       router('/sign-in')
    }
 
+   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setUserData({ ...userData, [event.target.name]: event.target.value })
+   }
+
+
+   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (userData.name && userData.email && userData.password && userData.role) {
+         try {
+            console.log('Submitted Data :', userData);
+            const response = await axios.post('http://localhost:5000/api/v1/auth/register', { userData });
+            console.log('Submitted res :', response);
+            console.log(response);
+            if (response) {
+               alert('Successfull')
+               setUserData({ name: '', email: '', password: '', role: '' })
+            }
+         } catch (error) {
+            console.log(error)
+         }
+      } else {
+         alert('Error')
+      }
+   }
+
    return (
       <Box sx={signUpLayout}>
          <Paper sx={signUp}>
             <Typography sx={signUpTitle}>Sign Up</Typography>
-            <Box sx={inputLayout}>
+
+            <form onSubmit={handleSubmit}>
+               <Box sx={inputLayout}>
+                  <InputLabel sx={inputLabel} required>Name</InputLabel>
+                  <Box sx={inputColon}>:</Box>
+                  <TextField sx={inputTextField}
+                     InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
+                     id="outlined-basic"
+                     variant="outlined"
+                     name='name'
+                     type='text'
+                     value={userData.name}
+                     onChange={handleChange}
+                  />
+               </Box>
+               <Box sx={inputLayout}>
+                  <InputLabel sx={inputLabel} required>Role</InputLabel>
+                  <Box sx={inputColon}>:</Box>
+                  <TextField sx={inputTextField}
+                     InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
+                     id="outlined-basic"
+                     variant="outlined"
+                     name='role'
+                     type='text'
+                     value={userData.role}
+                     onChange={handleChange}
+                  />
+               </Box>
+               <Box sx={inputLayout}>
+                  <InputLabel sx={inputLabel} required>Email</InputLabel>
+                  <Box sx={inputColon}>:</Box>
+                  <TextField sx={inputTextField}
+                     InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
+                     id="outlined-basic"
+                     variant="outlined"
+                     name='email'
+                     type='text'
+                     value={userData.email}
+                     onChange={handleChange}
+                  />
+               </Box>
+               <Box sx={inputLayout}>
+                  <InputLabel sx={inputLabel} required>Password</InputLabel>
+                  <Box sx={inputColon}>:</Box>
+                  <TextField sx={inputTextField}
+                     InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
+                     id="outlined-basic"
+                     variant="outlined"
+                     name='password'
+                     type='text'
+                     value={userData.password}
+                     onChange={handleChange}
+                  />
+               </Box>
+
+               {/* <Box sx={inputLayout}>
                <InputLabel sx={inputLabel} required>First Name</InputLabel>
                <Box sx={inputColon}>:</Box>
                <TextField sx={inputTextField} InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }} placeholder='First Name' />
@@ -55,14 +149,16 @@ const SignUp = () => {
                <InputLabel sx={inputLabel} required>Confirm Password</InputLabel>
                <Box sx={inputColon}>:</Box>
                <TextField sx={inputTextField} InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }} placeholder='Confirm Password' />
-            </Box>
+            </Box> */}
 
-            <FormControlLabel control={<Checkbox defaultChecked />} label="I have read and agree to Terms and Conditions" />
+               <FormControlLabel control={<Checkbox defaultChecked />} label="I have read and agree to Terms and Conditions" />
 
-            <Box sx={suSubmitLayout}>
-               <Button variant='contained'>Submit</Button>
-               <Typography sx={suNavToSignIn} onClick={signInPg}>Already Registered? Sign In Here</Typography>
-            </Box>
+               <Box sx={suSubmitLayout}>
+                  <Button variant='contained' type='submit'>Submit</Button>
+                  <Typography sx={suNavToSignIn} onClick={signInPg}>Already Registered? Sign In Here</Typography>
+               </Box>
+            </form>
+
          </Paper>
       </Box>
 

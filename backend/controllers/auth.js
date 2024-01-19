@@ -2,9 +2,11 @@ import asyncHandler from "../middleware/async.js";
 import User from "../models/User.js";
 import ErrorResponse from "../utils/errorResponse.js";
 
+
+// .../api/v1/auth/register
 export const register = asyncHandler(async (req, res, next) => {
     // const { firstName, lastName, userName, dob, email, password, confirmPassword } = req.body.userData;
-    const { firstName, lastName, userName, dob, email, password, confirmPassword } = req.body;
+    const { firstName, lastName, userName, dob, email, password, confirmPassword } = req.body.userData;
     console.log(firstName, lastName, userName, dob, email, password, confirmPassword)
 
     const user = await User.create({
@@ -20,9 +22,10 @@ export const register = asyncHandler(async (req, res, next) => {
     sendTokenResponse(user, 200, res);
 });
 
+// .../api/v1/auth/login
 export const login = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
-
+    
     const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
@@ -55,10 +58,11 @@ const sendTokenResponse = (user, status, res) => {
     if (process.env.NODE_ENV === 'production') {
         option.secure = true
     }
-
+    
     res.status(status).cookie('token', token, option).json({ success: true, token });
 }
 
+// .../api/v1/auth/current-user
 export const getMe = asyncHandler(async (req, res, next) => {
     console.log('GetMe ======>', req.user.id)
     const user = await User.findById(req.user.id);

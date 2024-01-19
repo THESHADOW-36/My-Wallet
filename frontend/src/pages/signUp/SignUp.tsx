@@ -69,7 +69,7 @@ const SignUp = () => {
       if (userData.firstName && userData.lastName && userData.userName && userData.dob && userData.email && userData.password && userData.confirmPassword) {
          try {
             console.log('Submitted Data :', userData);
-            const response = await axios.post('http://localhost:5000/api/v1/auth/register', { userData });
+            const response = await axios.post('http://localhost:8000/api/v1/auth/register', { userData });
             console.log('Submitted res :', response);
             console.log(response);
             if (response) {

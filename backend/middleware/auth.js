@@ -6,10 +6,10 @@ import asyncHandler from "./async.js";
 
 export const protecter = asyncHandler(async (req, res, next) => {
    let token;
-   if (req.header.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.header.authorization.split(' ')[1];
+   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
    }
-   console.log(token)
+   console.log("token:", token)
    if (!token) {
       return next(new ErrorResponse('Token is not found!', 401));
    }

@@ -1,10 +1,10 @@
 import { Router } from "express";
 import auth from "./auth.js";
-import wallet from "./wallet.js";
+import expenses from "./expenses.js";
 
 const router = Router();
 
 router.use('/auth', auth)
-router.use('/wallet', wallet)
+router.use('/wallet', expenses)
 
 export default router;

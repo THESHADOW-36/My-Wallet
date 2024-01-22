@@ -15,10 +15,24 @@ export const addExpenses = asyncHandler(async (req, res, next) => {
 // .../api/v1/wallet/get-exp
 export const getExpenses = asyncHandler(async (req, res, next) => {
    const { id } = req.user;
+   const { cat } = req.query;
 
-   const allExp = await Expenses.find({ userId: id })
+   const allExp = await Expenses.find(cat ? { category: cat } : { userId: id });
+
+   console.log('req - ', req);
 
    sendTokenResponse(allExp, 200, res);
+})
+
+export const editExpenses = asyncHandler(async (req, res, next) => {
+   const { date, name, category, amount, payMethod } = req.body;
+   const { _id: itemId } = req.param;
+   console.log('req - ', req)
+   console.log(date, name, category, amount, payMethod);
+
+   const expData = await Expenses.findByIdAndUpdate(itemId, { userId: req.user, date, name, category, amount, payMethod });
+
+   sendTokenResponse(expData, 200, res);
 })
 
 // .../api/v1/wallet/income
@@ -27,7 +41,7 @@ export const addIncome = asyncHandler(async (req, res, next) => {
 })
 
 export const sendTokenResponse = (data, status, res) => {
-   const token = data
+   // const token = data
 
-   res.status(200).json({ success: true, token });
+   res.status(200).json({ success: true, data });
 }

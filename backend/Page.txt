@@ -1,0 +1,30 @@
+Login/Register (controller)
+-register
+-login
+-getMe
+
+Expenses (controller)
+-addExpenses
+-getExpenses
+-sortByDate
+-sortByName
+-sortByCategory
+-delete
+-edit
+-priceRange
+-paymentMethod
+-pagination
+
+Income (controller)
+-addIncome
+-getIncome
+-sortByDate
+-sortByName
+-sortByCategory
+-delete
+-edit
+-priceRange
+-paymentMethod
+-pagination
+
+Search (controller)  

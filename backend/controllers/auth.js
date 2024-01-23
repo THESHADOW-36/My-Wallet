@@ -5,9 +5,9 @@ import ErrorResponse from "../utils/errorResponse.js";
 
 // .../api/v1/auth/register
 export const register = asyncHandler(async (req, res, next) => {
-    // const { firstName, lastName, userName, dob, email, password, confirmPassword } = req.body.userData;
-    const { firstName, lastName, userName, dob, email, password, confirmPassword } = req.body.userData;
-    console.log(firstName, lastName, userName, dob, email, password, confirmPassword)
+    // const { firstName, lastName, userName, dob, email, password, confirmPassword } = req.body;
+    const { firstName, lastName, userName, dob, email, password } = req.body.userData;
+    console.log(req.body.userData)
 
     const user = await User.create({
         firstName,
@@ -15,8 +15,7 @@ export const register = asyncHandler(async (req, res, next) => {
         userName,
         dob,
         email,
-        password,
-        confirmPassword
+        password
     });
 
     sendTokenResponse(user, 200, res);
@@ -25,7 +24,7 @@ export const register = asyncHandler(async (req, res, next) => {
 // .../api/v1/auth/login
 export const login = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
-    
+
     const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
@@ -36,11 +35,31 @@ export const login = asyncHandler(async (req, res, next) => {
     const isMatch = await user.matchPassword(password);
 
     if (!isMatch) {
-        return next(new ErrorResponse('Invalid email and password', 401));
+        return next(new ErrorResponse('Invalid password', 401));
     }
 
     sendTokenResponse(user, 200, res);
 });
+
+// .../api/v1/auth/current-user
+export const getMe = asyncHandler(async (req, res, next) => {
+    console.log('GetMe ======>', req.user.id)
+    const user = await User.findById(req.user.id);
+
+    res.status(200).json({ success: true, data: user });
+});
+
+export const editProfile = asyncHandler(async (req, res, next) => {
+    const { firstName, lastName, userName, dob, email, password } = req.body;
+
+    const editUser = await User.findByIdAndUpdate(req.user.id, { firstName, lastName, userName, dob, email, password }, { new: true });
+    console.log("editUser - ", editUser)
+
+    //editPass in model
+
+    res.status(200).json({ success: true, data: editUser });
+})
+
 
 // Genrate JWT web token and cookies and send to res
 const sendTokenResponse = (user, status, res) => {
@@ -58,14 +77,6 @@ const sendTokenResponse = (user, status, res) => {
     if (process.env.NODE_ENV === 'production') {
         option.secure = true
     }
-    
+
     res.status(status).cookie('token', token, option).json({ success: true, token });
 }
-
-// .../api/v1/auth/current-user
-export const getMe = asyncHandler(async (req, res, next) => {
-    console.log('GetMe ======>', req.user.id)
-    const user = await User.findById(req.user.id);
-
-    res.status(200).json({ success: true, data: user });
-});

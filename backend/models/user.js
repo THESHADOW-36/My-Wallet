@@ -46,13 +46,14 @@ const UserSchema = new Schema({
         minlength: [6, 'The password must be more than 6 character'],
         select: false
     },
-    resetPasswordToken: String,  //???????
-    restePasswordExpire: Date,   //???????
+    // resetPasswordToken: String,  //???????
+    // restePasswordExpire: Date,   //???????
     createdAt: {
         type: Date,
         default: Date.now
     }
 });
+console.log("this.password : ", UserSchema.password)
 
 // Encript password
 UserSchema.pre('save', async function (next) {
@@ -60,6 +61,13 @@ UserSchema.pre('save', async function (next) {
     this.password = await hash(this.password, salt);
     next();
 });
+
+// Encrypt edited password
+UserSchema.methods.editPass = async function () {
+    const salt = await genSalt(10);
+    this.password = await hash(this.password, salt);
+    next();
+};
 
 // Sign JWT and return
 UserSchema.methods.getJWTWebToken = function () {
@@ -72,5 +80,6 @@ UserSchema.methods.getJWTWebToken = function () {
 UserSchema.methods.matchPassword = async function (enterPassword) {
     return await compare(enterPassword, this.password);
 }
+
 
 export default model('User', UserSchema);

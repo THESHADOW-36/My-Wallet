@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 
-const Expenses = new Schema({
+const Incomes = new Schema({
    date: {
       type: String,
       required: [true, "Please enter the date"],
@@ -12,26 +12,9 @@ const Expenses = new Schema({
       required: [true, "Please enter the date"],
       trim: true
    },
-   category: {
+   bank: {
       type: String,
-      // enum: [
-      //    "Health & Personal Care",
-      //    "Transportation",
-      //    "Home Services",
-      //    "Electronics",
-      //    "Households",
-      //    "Furniture",
-      //    "Clothing",
-      //    "Wearables",
-      //    "Jewellery",
-      //    "Groceries",
-      //    "Insurance",
-      //    "Food",
-      //    "Pets",
-      //    "Gifts",
-      //    "Others"
-      // ],
-      required: [true, "Mention the category"],
+      required: [false, "Mention the bank name if you transfer throught bank"],
       trim: true
    },
    amount: {
@@ -51,4 +34,4 @@ const Expenses = new Schema({
    }
 })
 
-export default mongoose.model('Expenses', Expenses)
+export default mongoose.model('Incomes', Incomes)

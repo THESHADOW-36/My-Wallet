@@ -5,17 +5,17 @@ import jwt from 'jsonwebtoken';
 const UserSchema = new Schema({
     firstName: {
         type: String,
-        required: [true, 'Please enter the name'],
+        required: [true, 'Please enter the first name'],
         trim: true,
     },
     lastName: {
         type: String,
-        required: [true, 'Please enter the name'],
+        required: [true, 'Please enter the last name'],
         trim: true,
     },
     userName: {
         type: String,
-        required: [true, 'Please enter the name'],
+        required: [true, 'Please enter the user name'],
         trim: true,
     },
     role: {
@@ -42,7 +42,7 @@ const UserSchema = new Schema({
     },
     confirmPassword: {
         type: String,
-        required: [true, 'Please provide a password'],
+        required: [false, 'Please provide a confirm password'],
         minlength: [6, 'The password must be more than 6 character'],
         select: false
     },
@@ -63,11 +63,16 @@ UserSchema.pre('save', async function (next) {
 });
 
 // Encrypt edited password
-UserSchema.methods.editPass = async function () {
-    const salt = await genSalt(10);
-    this.password = await hash(this.password, salt);
-    next();
-};
+// UserSchema.post('find', async function (next) {
+//     const salt = await genSalt(10);
+//     this.password = await hash(this.password, salt);
+//     next();
+// });
+// UserSchema.methods.editPass = async function (next) {
+//     const salt = await genSalt(10);
+//     this.password = await hash(this.password, salt);
+//     next();
+// };
 
 // Sign JWT and return
 UserSchema.methods.getJWTWebToken = function () {

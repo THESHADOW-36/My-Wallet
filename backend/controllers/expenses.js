@@ -5,10 +5,9 @@ import ErrorResponse from "../utils/errorResponse.js";
 // .../api/v1/wallet/expenses
 export const addExpenses = asyncHandler(async (req, res, next) => {
    const { date, name, category, amount, payMethod } = req.body;
-   // if (!date || !name || !category || !amount || !payMethod) return next(new ErrorResponse('All fields are mandatory'))
-   console.log(date, name, category, amount, payMethod)
+   console.log("req.body : ", req.body)
 
-   const expData = await Expenses.create({ userId: req.user, date, name, category, amount, payMethod })
+   const expData = await Expenses.create({ userId: req.user, date, name, category, amount, payMethod });
 
    sendTokenResponse(expData, 200, res);
 })
@@ -16,12 +15,10 @@ export const addExpenses = asyncHandler(async (req, res, next) => {
 // .../api/v1/wallet/expenses
 export const getExpenses = asyncHandler(async (req, res, next) => {
    const query = { userId: req.user }
-   const { date, name, category, amount, payMethod, skipPg, limitPg } = req.query;
+   const { date, name, category, amount, payMethod, skip, limit } = req.query;
 
-   console.log('skipPg - ', skipPg)
-   console.log('limitPg - ', limitPg)
-   if (!skipPg) return next(new ErrorResponse('Pagination skip is not found', 401))
-   if (!limitPg) return next(new ErrorResponse('Pagination limit is not found', 401))
+   if (!skip) return next(new ErrorResponse('Pagination skip is not found', 401))
+   if (!limit) return next(new ErrorResponse('Pagination limit is not found', 401))
 
    if (date) {
       query['date'] = date;
@@ -39,11 +36,10 @@ export const getExpenses = asyncHandler(async (req, res, next) => {
       query['payMethod'] = payMethod;
    }
    // console.log('req - ', req);
-   console.log('req.user - ', req.user.id)
-   console.log('query - ', query)
+   // console.log('req.user - ', req.user.id)
+   // console.log('query - ', query)
 
-   const allExp = await Expenses.find(query).skip(skipPg).limit(limitPg);
-
+   const allExp = await Expenses.find(query).skip(skip).limit(limit).select("-_id -userId -__v");
 
    sendTokenResponse(allExp, 200, res);
 })
@@ -54,7 +50,7 @@ export const editExpense = asyncHandler(async (req, res, next) => {
    console.log('req - ', req)
    console.log('id - ', id)
 
-   const expData = await Expenses.findByIdAndUpdate(id, { userId: req.user, date, name, category, amount, payMethod }, { new: true });
+   const expData = await Expenses.findByIdAndUpdate(id, { userId: req.user, date, name, category, amount, payMethod }, { new: true }).select("-_id -userId -__v");
 
    sendTokenResponse(expData, 200, res);
 })
@@ -70,7 +66,5 @@ export const deleteExpense = asyncHandler(async (req, res, next) => {
 })
 
 export const sendTokenResponse = (data, status, res) => {
-   // const token = data
-
-   res.status(200).json({ success: true, data });
+   res.status(status).json({ success: true, data });
 }

@@ -1,9 +1,12 @@
 import asyncHandler from "../middleware/async.js";
+import Incomes from "../models/incomes.js";
 
 export const addIncomes = asyncHandler(async (req, res, next) => {
-   const { date, name, bank, amount, payMethod, userId } = req.body;
+   const { date, name, bank, amount, payMethod } = req.body;
 
-   sendIncomeResponse(addExp, 200, res)
+   const incomeData = await Incomes.create({ userId: req.user, date, name, bank, amount, payMethod })
+
+   sendIncomeResponse(incomeData, 200, res)
 })
 
 export const getIncomes = asyncHandler(async (req, res, next) => {

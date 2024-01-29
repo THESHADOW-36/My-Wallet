@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 
 const Expenses = new Schema({
    date: {
-      type: String,
+      type: Date,
       required: [true, "Please enter the date"],
       trim: true
    },
@@ -35,7 +35,7 @@ const Expenses = new Schema({
       trim: true
    },
    amount: {
-      type: String,
+      type: Number,
       required: [true, "Please enter the value of the item"],
       trim: true
    },

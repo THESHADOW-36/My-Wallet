@@ -3,13 +3,13 @@ import mongoose, { Schema } from "mongoose";
 
 const Incomes = new Schema({
    date: {
-      type: String,
+      type: Date,
       required: [true, "Please enter the date"],
       trim: true
    },
    name: {
       type: String,
-      required: [true, "Please enter the date"],
+      required: [true, "Please enter the Name"],
       trim: true
    },
    bank: {
@@ -18,14 +18,14 @@ const Incomes = new Schema({
       trim: true
    },
    amount: {
-      type: String,
+      type: Number,
       required: [true, "Please enter the value of the item"],
       trim: true
    },
    payMethod: {
       type: String,
       required: [true, "Method of the payment"],
-      enum: ['Credit Card', 'Debit Card', 'UPI', 'Cash'],
+      enum: ['Transfered', 'Cheque', 'UPI', 'Cash', 'Bank'],
       trim: true
    },
    userId: {

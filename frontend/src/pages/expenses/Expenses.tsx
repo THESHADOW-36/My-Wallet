@@ -2,10 +2,18 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider
 import { addExpDiaTextField, addExpDiaTextFieldLay, addExpDialog, addExpDialogAction, addExpDialogTitle, expAddButton, expRecTableTitle, expRecentTable, expRecentTableContainer, expRtTableBodyCell, expRtTableBodyRow, expRtTableHeadCell, expRtTableHeadRow, expTableContent, expTextField, expTopHeader, expenses, tablePagination, tablePaginationText } from './ExpensesStyle'
 import { mwExpData } from '../data/MyWalletData'
 import { AddCircleTwoTone, DeleteForeverTwoTone, EditTwoTone, Search } from '@mui/icons-material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { API } from '../../constant/Network'
 
 
 interface ExpData {
+   date: string;
+   name: string;
+   category: string;
+   amount: string;
+   payment: string;
+}
+interface ExpDataDB {
    date: string;
    name: string;
    category: string;
@@ -27,6 +35,7 @@ const Expenses: React.FC = () => {
    const [errorExpenses, setErrorExpenses] = useState<ErrExp>({ date: false, name: false, category: false, amount: false, payment: false });
    const [addExpenses, setAddExpenses] = useState(false);
    const [editExpenses, setEditExpenses] = useState(false);
+   const [expDataDB, setExpDataDB] = useState<ExpDataDB[]>([])
    // console.log(expData)
    // console.log('errorExpenses', errorExpenses)
 
@@ -36,36 +45,46 @@ const Expenses: React.FC = () => {
 
    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      if (expData.date && expData.name && expData.category && expData.amount && expData.payment) {
-         alert('Successfull')
-         setExpData({ date: '', name: '', category: '', amount: '', payment: '' })
-      } else {
-         if (!expData.date) {
-            errorExpenses.date = true;
+      try {
+         if (expData.date && expData.name && expData.category && expData.amount && expData.payment) {
+            // new Observable((observer: any) => {
+            //    const response = axios.post('http://localhost:8000/api/v1/wallet/expenses')
+            //    if (response) {
+
+            //    }
+            // })
+            alert('Successfull')
+            setExpData({ date: '', name: '', category: '', amount: '', payment: '' })
          } else {
-            errorExpenses.date = false;
+            if (!expData.date) {
+               errorExpenses.date = true;
+            } else {
+               errorExpenses.date = false;
+            }
+            if (!expData.name) {
+               errorExpenses.name = true;
+            } else {
+               errorExpenses.name = false;
+            }
+            if (!expData.category) {
+               errorExpenses.category = true;
+            } else {
+               errorExpenses.category = false;
+            }
+            if (!expData.amount) {
+               errorExpenses.amount = true;
+            } else {
+               errorExpenses.amount = false;
+            }
+            if (!expData.payment) {
+               errorExpenses.payment = true;
+            } else {
+               errorExpenses.payment = false;
+            }
+            setErrorExpenses({ ...errorExpenses });
          }
-         if (!expData.name) {
-            errorExpenses.name = true;
-         } else {
-            errorExpenses.name = false;
-         }
-         if (!expData.category) {
-            errorExpenses.category = true;
-         } else {
-            errorExpenses.category = false;
-         }
-         if (!expData.amount) {
-            errorExpenses.amount = true;
-         } else {
-            errorExpenses.amount = false;
-         }
-         if (!expData.payment) {
-            errorExpenses.payment = true;
-         } else {
-            errorExpenses.payment = false;
-         }
-         setErrorExpenses({ ...errorExpenses });
+      } catch (error) {
+         console.log(error)
       }
    }
 
@@ -77,7 +96,6 @@ const Expenses: React.FC = () => {
          setErrorExpenses({ ...errorExpenses, [title]: false })
       }
    }
-
    // HandleBlur Structure...
    // const handleBlurName = () => {
    //    if (!expData.name) {
@@ -86,6 +104,21 @@ const Expenses: React.FC = () => {
    //       setErrorExpenses({ ...errorExpenses, name: false })
    //    }
    // }
+
+   const getExpData = () => {
+      const url = 'http://localhost:8000/api/v1/wallet/expenses';
+      const paramsObj = { skip: 0, limit: 0 };
+      const headers = { Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YTkxMTM0MWNlOGE3MTYwOGQ3ZmFkNyIsImlhdCI6MTcwNjYxNjQyMSwiZXhwIjoxNzA2NjM5ODc3fQ.O1Krub6JxY1dTxcR9-fru8a37ZpoIhdfuR5ynD6iNdY' };
+      const config = { paramsObj, headers }
+      API.get(url, config)?.subscribe((res: any) => {
+         setExpDataDB(res.data)
+      })
+   }
+   console.log(expDataDB)
+
+   useEffect(() => {
+      getExpData();
+   }, [])
    return (
       <Box sx={expenses}>
          <Paper sx={expRecentTable}>

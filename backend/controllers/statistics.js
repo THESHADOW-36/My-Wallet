@@ -8,7 +8,7 @@ export const statistics = asyncHandler(async (req, res, next) => {
    const currentUserId = new mongoose.Types.ObjectId(req.user.id);
    const currentDate = new Date();
    const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-   const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+   const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
    // console.log("currentDate", currentDate)
    // console.log("startDate", startDate)
    // console.log("endDate", endDate)
@@ -24,7 +24,7 @@ export const statistics = asyncHandler(async (req, res, next) => {
       },
       {
          $group: {
-            _id: "$userId",
+            _id: null,
             totalExp: { $sum: "$amount" },
             recordsExp: { $sum: 1 }
          }
@@ -43,7 +43,7 @@ export const statistics = asyncHandler(async (req, res, next) => {
       },
       {
          $group: {
-            _id: "$userId",
+            _id: null,
             totalIncome: { $sum: "$amount" },
             recordsExp: { $sum: 1 }
          }

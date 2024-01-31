@@ -4,6 +4,9 @@ import { inputColon, inputLabel, inputLayout, inputTextField, signUp, signUpLayo
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
+import { API } from '../../constant/Network';
+import toast from 'react-hot-toast';
+import { Url } from '../../constant/Url';
 
 
 
@@ -63,24 +66,35 @@ const SignUp = () => {
    //       alert('Error')
    //    }
    // }
-
    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       if (userData.firstName && userData.lastName && userData.userName && userData.dob && userData.email && userData.password && userData.confirmPassword) {
-         try {
-            console.log('Submitted Data :', userData);
-            const response = await axios.post('http://localhost:8000/api/v1/auth/register', { userData });
-            console.log('Submitted res :', response);
-            console.log(response);
-            if (response) {
-               alert('Successfull')
-               setUserData({ firstName: '', lastName: '', userName: '', dob: '', email: '', password: '', confirmPassword: '' })
-            }
-         } catch (error) {
-            console.log(error)
-         }
+         API.post(Url.register, userData)?.subscribe({
+            next(res: any) {
+               toast.success("Resgistered Successfull")
+            },
+            error(err: any) {
+               console.log(err)
+            },
+            complete() {
+               console.log('Completed');
+            },
+         })
+
+         // try {
+         //    console.log('Submitted Data :', userData);
+         //    const response = await axios.post('http://localhost:8000/api/v1/auth/register', { userData });
+         //    console.log('Submitted res :', response);
+         //    console.log(response);
+         //    if (response) {
+         //       toast('Successfull')
+         //       setUserData({ firstName: '', lastName: '', userName: '', dob: '', email: '', password: '', confirmPassword: '' })
+         //    }
+         // } catch (error) {
+         //    console.log(error)
+         // }
       } else {
-         alert('Error')
+         toast.error('Error')
          if (!userData.firstName) {
             errorData.firstName = true;
          } else {
@@ -148,8 +162,8 @@ const SignUp = () => {
                      onBlur={() => handleError('firstName')}
                      onInput={() => handleError('firstName')}
                      onChange={handleChange}
-                     placeholder='First Name' 
-                     helperText={errorData.firstName && 'Error'}/>
+                     placeholder='First Name'
+                     helperText={errorData.firstName && 'Error'} />
                </Box>
 
                <Box sx={inputLayout}>
@@ -166,8 +180,8 @@ const SignUp = () => {
                      onBlur={() => handleError('lastName')}
                      onInput={() => handleError('lastName')}
                      onChange={handleChange}
-                     placeholder='Last Name' 
-                     helperText={errorData.lastName && 'Error'}/>
+                     placeholder='Last Name'
+                     helperText={errorData.lastName && 'Error'} />
                </Box>
 
                <Box sx={inputLayout}>
@@ -184,8 +198,8 @@ const SignUp = () => {
                      onBlur={() => handleError('userName')}
                      onInput={() => handleError('userName')}
                      onChange={handleChange}
-                     placeholder='User Name' 
-                     helperText={errorData.userName && 'Error'}/>
+                     placeholder='User Name'
+                     helperText={errorData.userName && 'Error'} />
                </Box>
 
                <Box sx={inputLayout}>
@@ -202,8 +216,8 @@ const SignUp = () => {
                      onBlur={() => handleError('dob')}
                      onInput={() => handleError('dob')}
                      onChange={handleChange}
-                     placeholder='DOB' 
-                     helperText={errorData.dob && 'Error'}/>
+                     placeholder='DOB'
+                     helperText={errorData.dob && 'Error'} />
                </Box>
 
                <Box sx={inputLayout}>
@@ -220,8 +234,8 @@ const SignUp = () => {
                      onBlur={() => handleError('email')}
                      onInput={() => handleError('email')}
                      onChange={handleChange}
-                     placeholder='Email' 
-                     helperText={errorData.email && 'Error'}/>
+                     placeholder='Email'
+                     helperText={errorData.email && 'Error'} />
                </Box>
 
                <Box sx={inputLayout}>
@@ -238,8 +252,8 @@ const SignUp = () => {
                      onBlur={() => handleError('password')}
                      onInput={() => handleError('password')}
                      onChange={handleChange}
-                     placeholder='Password' 
-                     helperText={errorData.password && 'Error'}/>
+                     placeholder='Password'
+                     helperText={errorData.password && 'Error'} />
                </Box>
 
                <Box sx={inputLayout}>
@@ -256,8 +270,8 @@ const SignUp = () => {
                      onBlur={() => handleError('confirmPassword')}
                      onInput={() => handleError('confirmPassword')}
                      onChange={handleChange}
-                     placeholder='Confirm Password' 
-                     helperText={errorData.confirmPassword && 'Error'}/>
+                     placeholder='Confirm Password'
+                     helperText={errorData.confirmPassword && 'Error'} />
                </Box>
 
                <FormControlLabel control={<Checkbox defaultChecked />} label="I have read and agree to Terms and Conditions" />

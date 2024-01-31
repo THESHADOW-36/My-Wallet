@@ -1,11 +1,8 @@
-import React from 'react'
 
-const Url: React.FC = () => {
-   return (
-      <div>
+export const register = "http://localhost:8000/api/v1/auth/register"
+export const getExp = "http://localhost:8000/api/v1/wallet/expenses"
 
-      </div>
-   )
-}
-
-export default Url;
+export const Url = {
+   register,
+   getExp,
+};

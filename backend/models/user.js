@@ -24,7 +24,7 @@ const UserSchema = new Schema({
         default: 'user'
     },
     dob: {
-        type: String,
+        type: Date,
         required: [true, 'Please enter the name'],
         trim: true,
     },

@@ -1,9 +1,10 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, InputAdornment, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
 import { addExpDiaTextField, addExpDiaTextFieldLay, addExpDialog, addExpDialogAction, addExpDialogTitle, expAddButton, expRecTableTitle, expRecentTable, expRecentTableContainer, expRtTableBodyCell, expRtTableBodyRow, expRtTableHeadCell, expRtTableHeadRow, expTableContent, expTextField, expTopHeader, expenses, tablePagination, tablePaginationText } from './ExpensesStyle'
-import { mwExpData } from '../data/MyWalletData'
+// import { mwExpData } from '../data/MyWalletData'
 import { AddCircleTwoTone, DeleteForeverTwoTone, EditTwoTone, Search } from '@mui/icons-material'
 import { useEffect, useState } from 'react'
 import { API } from '../../constant/Network'
+import toast from 'react-hot-toast'
 
 
 interface ExpData {
@@ -18,7 +19,7 @@ interface ExpDataDB {
    name: string;
    category: string;
    amount: string;
-   payment: string;
+   payMethod: string;
 }
 
 interface ErrExp {
@@ -53,7 +54,7 @@ const Expenses: React.FC = () => {
 
             //    }
             // })
-            alert('Successfull')
+            toast('Successfull')
             setExpData({ date: '', name: '', category: '', amount: '', payment: '' })
          } else {
             if (!expData.date) {
@@ -108,17 +109,25 @@ const Expenses: React.FC = () => {
    const getExpData = () => {
       const url = 'http://localhost:8000/api/v1/wallet/expenses';
       const paramsObj = { skip: 0, limit: 0 };
-      const headers = { Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YTkxMTM0MWNlOGE3MTYwOGQ3ZmFkNyIsImlhdCI6MTcwNjYxNjQyMSwiZXhwIjoxNzA2NjM5ODc3fQ.O1Krub6JxY1dTxcR9-fru8a37ZpoIhdfuR5ynD6iNdY' };
-      const config = { paramsObj, headers }
-      API.get(url, config)?.subscribe((res: any) => {
-         setExpDataDB(res.data)
+      const headers = { Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YTkxMTM0MWNlOGE3MTYwOGQ3ZmFkNyIsImlhdCI6MTcwNjY3ODc0MywiZXhwIjoxNzA2NzAyMTk5fQ.JCJME-vXrJBDMBJf8ErTT_UeTZEeIANfPF_r2mBQHX4' };
+      API.get(url, paramsObj, headers)?.subscribe({
+         next(res: any) {
+            setExpDataDB(res.data);
+            console.log("res :", res)
+         },
+         error: (error: any) => {
+            console.log('Error:', error);
+         },
+         complete: () => {
+            console.log('Completed');
+         },
       })
    }
-   console.log(expDataDB)
 
    useEffect(() => {
       getExpData();
    }, [])
+   console.log("expDataDB :", expDataDB)
    return (
       <Box sx={expenses}>
          <Paper sx={expRecentTable}>
@@ -242,15 +251,15 @@ const Expenses: React.FC = () => {
                         </TableHead>
 
                         <TableBody>
-                           {mwExpData.map((rtc, index) => (
+                           {expDataDB.map((rtc, index) => (
                               <TableRow sx={expRtTableBodyRow} key={index}>
-                                 <TableCell sx={expRtTableBodyCell}>{rtc.num}</TableCell>
+                                 <TableCell sx={expRtTableBodyCell}>{index + 1}</TableCell>
                                  <TableCell sx={expRtTableBodyCell}>{rtc.date}</TableCell>
                                  <TableCell sx={expRtTableBodyCell}>{rtc.name}</TableCell>
                                  <TableCell sx={expRtTableBodyCell}>{rtc.category}</TableCell>
                                  {/* <TableCell sx={expRtTableBodyCell}>{rtc.quantity}</TableCell> */}
-                                 <TableCell sx={expRtTableBodyCell}>{rtc.expenses}</TableCell>
-                                 <TableCell sx={expRtTableBodyCell}>{rtc.method}</TableCell>
+                                 <TableCell sx={expRtTableBodyCell}>{rtc.amount}</TableCell>
+                                 <TableCell sx={expRtTableBodyCell}>{rtc.payMethod}</TableCell>
                                  <TableCell sx={expRtTableBodyCell}><IconButton onClick={() => setEditExpenses(true)}><EditTwoTone /></IconButton></TableCell>
                                  <TableCell sx={expRtTableBodyCell}><IconButton sx={{ '&:hover': { color: 'red' } }}><DeleteForeverTwoTone /></IconButton></TableCell>
                               </TableRow>

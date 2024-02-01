@@ -9,6 +9,7 @@ export const protecter = asyncHandler(async (req, res, next) => {
    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];
    }
+   console.log("req : ", req)
    console.log("token : ", token)
    if (!token) {
       return next(new ErrorResponse('Token is not found!', 401));

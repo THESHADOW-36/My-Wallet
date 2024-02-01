@@ -10,7 +10,7 @@ import { Url } from '../../constant/Url';
 
 
 
-interface UsData {
+interface UserData {
    firstName: string;
    lastName: string;
    userName: string;
@@ -32,7 +32,7 @@ interface ErrData {
 
 const SignUp = () => {
 
-   const [userData, setUserData] = useState<UsData>({ firstName: '', lastName: '', userName: '', dob: '', email: '', password: '', confirmPassword: '' });
+   const [userData, setUserData] = useState<UserData>({ firstName: '', lastName: '', userName: '', dob: '', email: '', password: '', confirmPassword: '' });
    console.log(userData)
    const [errorData, setErrorData] = useState<ErrData>({ firstName: false, lastName: false, userName: false, dob: false, email: false, password: false, confirmPassword: false })
 
@@ -46,53 +46,22 @@ const SignUp = () => {
       setUserData({ ...userData, [event.target.name]: event.target.value })
    }
 
-
-   // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-   //    event.preventDefault();
-   //    if (userData.name && userData.email && userData.password && userData.role) {
-   //       try {
-   //          console.log('Submitted Data :', userData);
-   //          const response = await axios.post('http://localhost:5000/api/v1/auth/register', { userData });
-   //          console.log('Submitted res :', response);
-   //          console.log(response);
-   //          if (response) {
-   //             alert('Successfull')
-   //             setUserData({ name: '', email: '', password: '', role: '' })
-   //          }
-   //       } catch (error) {
-   //          console.log(error)
-   //       }
-   //    } else {
-   //       alert('Error')
-   //    }
-   // }
-   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       if (userData.firstName && userData.lastName && userData.userName && userData.dob && userData.email && userData.password && userData.confirmPassword) {
          API.post(Url.register, userData)?.subscribe({
             next(res: any) {
+               console.log(res.token)
                toast.success("Resgistered Successfull")
+               setUserData({ firstName: '', lastName: '', userName: '', dob: '', email: '', password: '', confirmPassword: '' })
             },
             error(err: any) {
                console.log(err)
             },
             complete() {
                console.log('Completed');
-            },
+            }
          })
-
-         // try {
-         //    console.log('Submitted Data :', userData);
-         //    const response = await axios.post('http://localhost:8000/api/v1/auth/register', { userData });
-         //    console.log('Submitted res :', response);
-         //    console.log(response);
-         //    if (response) {
-         //       toast('Successfull')
-         //       setUserData({ firstName: '', lastName: '', userName: '', dob: '', email: '', password: '', confirmPassword: '' })
-         //    }
-         // } catch (error) {
-         //    console.log(error)
-         // }
       } else {
          toast.error('Error')
          if (!userData.firstName) {
@@ -134,7 +103,7 @@ const SignUp = () => {
       }
    }
 
-   const handleError = (title: keyof UsData) => {
+   const handleError = (title: keyof UserData) => {
       if (!userData[title]) {
          setErrorData({ ...errorData, [title]: true })
       } else {
@@ -153,7 +122,6 @@ const SignUp = () => {
                   <Box sx={inputColon}>:</Box>
                   <TextField sx={inputTextField}
                      InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
-                     id="outlined-basic"
                      variant="outlined"
                      name='firstName'
                      type='text'
@@ -171,7 +139,6 @@ const SignUp = () => {
                   <Box sx={inputColon}>:</Box>
                   <TextField sx={inputTextField}
                      InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
-                     id="outlined-basic"
                      variant="outlined"
                      name='lastName'
                      type='text'
@@ -189,7 +156,6 @@ const SignUp = () => {
                   <Box sx={inputColon}>:</Box>
                   <TextField sx={inputTextField}
                      InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
-                     id="outlined-basic"
                      variant="outlined"
                      name='userName'
                      type='text'
@@ -207,7 +173,6 @@ const SignUp = () => {
                   <Box sx={inputColon}>:</Box>
                   <TextField sx={inputTextField}
                      InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
-                     id="outlined-basic"
                      variant="outlined"
                      name='dob'
                      type='date'
@@ -225,7 +190,6 @@ const SignUp = () => {
                   <Box sx={inputColon}>:</Box>
                   <TextField sx={inputTextField}
                      InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
-                     id="outlined-basic"
                      variant="outlined"
                      name='email'
                      type='text'
@@ -243,7 +207,6 @@ const SignUp = () => {
                   <Box sx={inputColon}>:</Box>
                   <TextField sx={inputTextField}
                      InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
-                     id="outlined-basic"
                      variant="outlined"
                      name='password'
                      type='text'
@@ -261,7 +224,6 @@ const SignUp = () => {
                   <Box sx={inputColon}>:</Box>
                   <TextField sx={inputTextField}
                      InputProps={{ sx: { height: { xs: '34px', sm: '40px', md: '34px' }, fontSize: { xs: '15px', sm: '16px', md: '14px' } } }}
-                     id="outlined-basic"
                      variant="outlined"
                      name='confirmPassword'
                      type='text'

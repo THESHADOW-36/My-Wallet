@@ -6,7 +6,7 @@ const wallet = Router();
 
 wallet.post('/incomes',protecter, addIncomes)
 wallet.get('/incomes',protecter, getIncomes)
-wallet.patch('/income/:id',protecter, editIncome)
+wallet.put('/income/:id',protecter, editIncome)
 wallet.delete('/income/:id',protecter, deleteIncome)
 
 export default wallet;

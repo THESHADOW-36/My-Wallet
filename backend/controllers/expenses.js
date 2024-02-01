@@ -39,7 +39,7 @@ export const getExpenses = asyncHandler(async (req, res, next) => {
    // console.log('req.user - ', req.user.id)
    // console.log('query - ', query)
 
-   const allExp = await Expenses.find(query).skip(skip).limit(limit).select("-_id -userId -__v");
+   const allExp = await Expenses.find(query).skip(skip).limit(limit).select("-userId -__v");
 
    sendTokenResponse(allExp, 200, res);
 })

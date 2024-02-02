@@ -1,6 +1,5 @@
 // import logo from './logo.svg';
 // import './App.css';
-import React from 'react';
 import { Routes, Route } from "react-router-dom";
 import Homepage from "./pages/dashboard/Dashboard";
 import { Box } from '@mui/material';
@@ -23,6 +22,7 @@ function App(prop: mainProps) {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn loggedIn={prop.loggedIn} setLoggedIn={prop.setLoggedIn} />} />
         <Route path="/expenses" element={<Expenses />} />
+        <Route path="/expenses/:id" element={<Expenses />} />
         <Route path="/income" element={<Income />} />
       </Routes>
     </Box>

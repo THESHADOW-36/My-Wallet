@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Card, CardContent, Divider, Grid, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { dashboard, dbChart, dbBarChart, dbChartData, dbChartDataCurrency, dbChartDataLayout, dbChartDataName, dbChartDataYear, dbChartYear, dbKPICash, dbKPIName, dbKPIPaper, dbRecentTable, mwContent, dbRtTableHeadCell, dbRtTableBodyCell, dbKPIContent, dbKPIDetails, dbKPIIcon1, dbKPIIcon2, dbKPIIcon3, dbChartLayout, tablePagination, tablePaginationText, dbRecentTableContainer, dbTableContent } from './DashboardStyle'
 import { Bar } from 'react-chartjs-2'
@@ -6,6 +6,8 @@ import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title
 import { barChartExpensesData, barChartIncomeData, barChartLabels, dbChartDataContent } from "../data/DbData";
 import { AccountBalanceTwoTone, CurrencyExchangeTwoTone, DataSaverOnTwoTone } from "@mui/icons-material";
 import { mwExpData } from "../data/MyWalletData";
+import { API } from "../../constant/Network";
+import { Url } from "../../constant/Url";
 
 ChartJS.register(
    CategoryScale,
@@ -16,18 +18,22 @@ ChartJS.register(
    Legend
 );
 
+interface AccData {
+   exp: number;
+   income: number;
+   bal: number;
+}
 
 
-const Homepage = () => {
+
+const Homepage: React.FC = () => {
    // const [progress, setProgress] = useState(0);
-
    // useEffect(() => {
    //    setInterval(() => {
    //       setProgress((preProg) => (preProg >= 100 ? 0 : preProg + 10))
    //    }, 800)
    // }, [])
 
-   
    // eslint-disable-next-line
    const [barChartData, setBarChartData] = useState({
       labels: barChartLabels,
@@ -49,6 +55,31 @@ const Homepage = () => {
       ]
    });
 
+
+   const [accData, setAccData] = useState<AccData>({ exp: 0, income: 0, bal: 0 });
+
+   const myToken = localStorage.getItem('MyToken');
+   const headers = { Authorization: 'Bearer ' + myToken };
+
+   const accountDetails = () => {
+      API.get(Url.stats, {}, headers)?.subscribe({
+         next(res: any) {
+            // setExpDataDB(res.data);
+            console.log("res.expStats :", res.expStats)
+            console.log("res.incomeStats :", res.incomeStats)
+         },
+         error: (error: any) => {
+            console.log('Error:', error);
+         },
+         complete: () => {
+            console.log('Completed');
+         }
+      })
+   }
+
+   useEffect(() => {
+      accountDetails();
+   }, [])
 
    return (
       <Box sx={dashboard}>
@@ -114,8 +145,8 @@ const Homepage = () => {
                   </Box>
                   <Box sx={dbChartDataLayout}>
                      <Card sx={dbChartData}>
-                        {dbChartDataContent.map((chartData) => (
-                           <CardContent>
+                        {dbChartDataContent.map((chartData, index) => (
+                           <CardContent key={index}>
                               <Typography sx={dbChartDataYear}>{chartData.month}</Typography>
                               <Typography sx={dbChartDataName}>{chartData.income}</Typography>
                               <Typography sx={dbChartDataCurrency}>{chartData.incomeCurrency}</Typography>

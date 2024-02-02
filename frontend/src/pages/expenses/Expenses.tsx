@@ -1,10 +1,11 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, InputAdornment, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
 import { addExpDiaTextField, addExpDiaTextFieldLay, addExpDialog, addExpDialogAction, addExpDialogTitle, expAddButton, expRecTableTitle, expRecentTable, expRecentTableContainer, expRtTableBodyCell, expRtTableBodyRow, expRtTableHeadCell, expRtTableHeadRow, expTableContent, expTextField, expTopHeader, expenses, tablePagination, tablePaginationText } from './ExpensesStyle'
 import { AddCircleTwoTone, DeleteForeverTwoTone, EditTwoTone, Search } from '@mui/icons-material'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { API } from '../../constant/Network'
 import toast from 'react-hot-toast'
 import { Url } from '../../constant/Url'
+import { useNavigate, useParams } from 'react-router-dom'
 
 
 interface ExpData {
@@ -15,7 +16,8 @@ interface ExpData {
    payMethod: string;
 }
 interface ExpDataDB {
-   date: string;
+   _id: string;
+   date: number;
    name: string;
    category: string;
    amount: number | null | undefined;
@@ -31,21 +33,28 @@ interface ErrExp {
 }
 
 const Expenses: React.FC = () => {
+   const { id } = useParams();
+   const router = useNavigate();
    const [expData, setExpData] = useState<ExpData>({ date: '', name: '', category: '', amount: 0, payMethod: '' })
    const [errorExpenses, setErrorExpenses] = useState<ErrExp>({ date: false, name: false, category: false, amount: false, payMethod: false });
    const [addExpenses, setAddExpenses] = useState(false);
    const [editExpenses, setEditExpenses] = useState(false);
    const [expDataDB, setExpDataDB] = useState<ExpDataDB[]>([])
-   // console.log(expDataDB)
-   // console.log('errorExpenses', errorExpenses)
+   // console.log("expData :", expData)
    const paramsObj = { skip: 0, limit: 0 };
-   const myToken = localStorage.getItem('MyToken')
+   const myToken = localStorage.getItem('MyToken');
    const headers = { Authorization: 'Bearer ' + myToken };
    // console.log("headers :", headers)
    const config = {
       // params: { Url.editExp + "65bb8b1c04bde21d6bf97245" },
       headers: { Authorization: 'Bearer ' + myToken }
    }
+
+   const closeDialog = () => {
+      router('/expenses');
+      setEditExpenses(false);
+   }
+
    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setExpData({ ...expData, [event.target.name]: event.target.value })
       setErrorExpenses({ ...errorExpenses, [event.target.name]: false })
@@ -65,6 +74,7 @@ const Expenses: React.FC = () => {
    //       setErrorExpenses({ ...errorExpenses, name: false })
    //    }
    // }
+
    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       try {
@@ -74,6 +84,7 @@ const Expenses: React.FC = () => {
                   console.log("res :", res)
                   toast.success('Product added successfully')
                   setExpData({ date: '', name: '', category: '', amount: 0, payMethod: '' })
+                  setAddExpenses(false);
                },
                error: (error: any) => {
                   toast.error(error.response.data.error)
@@ -115,58 +126,91 @@ const Expenses: React.FC = () => {
          console.log(error)
       }
    }
+
+   const editSingleExp = (id: string) => {
+      const singleExpUrl = Url.getSingleExp + id
+      API.get(singleExpUrl, {}, headers)?.subscribe({
+         next(res: any) {
+            console.log(res.data)
+            setExpData(res.data);
+         },
+         error: (error: any) => {
+            console.log('Error:', error);
+         },
+         complete: () => {
+            console.log('Completed');
+         }
+      })
+      setEditExpenses(true);
+      router(`/expenses/${id}`);
+   }
+
    const handleEditSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      try {
-         if (expData.date && expData.name && expData.category && expData.amount && expData.payMethod) {
-            API.put(Url.editExp, expData, config)?.subscribe({
-               next(res: any) {
-                  console.log("res :", res)
-                  toast.success('Product added successfully')
-                  // setExpData({ date: '', name: '', category: '', amount: 0, payMethod: '' })
-               },
-               error: (error: any) => {
-                  toast.error(error.response.data.error)
-                  console.log('Error:', error.response.data.error);
-               },
-               complete: () => {
-                  console.log('Completed');
-               }
-            })
+      const editExpUrl = Url.editExp + id
+      if (expData.date && expData.name && expData.category && expData.amount && expData.payMethod) {
+         API.put(editExpUrl, expData, config)?.subscribe({
+            next(res: any) {
+               console.log("res :", res)
+               toast.success('Product added successfully')
+               setExpData({ date: '', name: '', category: '', amount: 0, payMethod: '' })
+               getExpData();
+               closeDialog();
+            },
+            error: (error: any) => {
+               toast.error(error.response.data)
+               console.log('Error:', error.response.data);
+            },
+            complete: () => {
+               console.log('Completed');
+            }
+         })
+      } else {
+         if (!expData.date) {
+            errorExpenses.date = true;
          } else {
-            if (!expData.date) {
-               errorExpenses.date = true;
-            } else {
-               errorExpenses.date = false;
-            }
-            if (!expData.name) {
-               errorExpenses.name = true;
-            } else {
-               errorExpenses.name = false;
-            }
-            if (!expData.category) {
-               errorExpenses.category = true;
-            } else {
-               errorExpenses.category = false;
-            }
-            if (!expData.amount) {
-               errorExpenses.amount = true;
-            } else {
-               errorExpenses.amount = false;
-            }
-            if (!expData.payMethod) {
-               errorExpenses.payMethod = true;
-            } else {
-               errorExpenses.payMethod = false;
-            }
-            setErrorExpenses({ ...errorExpenses });
+            errorExpenses.date = false;
          }
-      } catch (error) {
-         console.log(error)
+         if (!expData.name) {
+            errorExpenses.name = true;
+         } else {
+            errorExpenses.name = false;
+         }
+         if (!expData.category) {
+            errorExpenses.category = true;
+         } else {
+            errorExpenses.category = false;
+         }
+         if (!expData.amount) {
+            errorExpenses.amount = true;
+         } else {
+            errorExpenses.amount = false;
+         }
+         if (!expData.payMethod) {
+            errorExpenses.payMethod = true;
+         } else {
+            errorExpenses.payMethod = false;
+         }
+         setErrorExpenses({ ...errorExpenses });
       }
    }
 
-
+   const deleteExp = (id: string) => {
+      const delExpUrl = Url.delExp + id
+      console.log("delExpUrl :", id)
+      API.deleteApi(delExpUrl, {}, headers)?.subscribe({
+         next(res: any) {
+            toast.success('Product added successfully');
+            getExpData();
+         },
+         error: (error: any) => {
+            console.log('Error:', error);
+         },
+         complete: () => {
+            console.log('Completed');
+         }
+      })
+   }
 
    const getExpData = () => {
       API.get(Url.getExp, paramsObj, headers)?.subscribe({
@@ -186,7 +230,6 @@ const Expenses: React.FC = () => {
    useEffect(() => {
       getExpData();
    }, [])
-   // console.log("expDataDB :", expDataDB)
    return (
       <Box sx={expenses}>
          <Paper sx={expRecentTable}>
@@ -319,103 +362,98 @@ const Expenses: React.FC = () => {
                                  {/* <TableCell sx={expRtTableBodyCell}>{rtc.quantity}</TableCell> */}
                                  <TableCell sx={expRtTableBodyCell}>{rtc.amount}</TableCell>
                                  <TableCell sx={expRtTableBodyCell}>{rtc.payMethod}</TableCell>
-                                 <TableCell sx={expRtTableBodyCell}><IconButton onClick={() => setEditExpenses(true)}><EditTwoTone /></IconButton></TableCell>
-                                 <TableCell sx={expRtTableBodyCell}><IconButton sx={{ '&:hover': { color: 'red' } }}><DeleteForeverTwoTone /></IconButton></TableCell>
+                                 <TableCell sx={expRtTableBodyCell}><IconButton onClick={() => editSingleExp(rtc._id)}><EditTwoTone /></IconButton></TableCell>
+                                 <TableCell sx={expRtTableBodyCell}><IconButton onClick={() => deleteExp(rtc._id)} sx={{ '&:hover': { color: '#c20000' } }}><DeleteForeverTwoTone /></IconButton></TableCell>
+                                 <Dialog sx={addExpDialog} open={editExpenses} onClose={closeDialog} aria-labelledby='dialog-title' aria-describedby='dialog-description'>
+                                    <DialogTitle sx={addExpDialogTitle} id='dialog-title'>Edit Expenses</DialogTitle>
+                                    {/* <FormControl> */}
+                                    <form onSubmit={handleEditSubmit}>
+                                       <DialogContent>
+                                          <Box sx={addExpDiaTextFieldLay}>
+                                             <TextField
+                                                sx={addExpDiaTextField}
+                                                id="outlined-basic"
+                                                variant="outlined"
+                                                label="Date"
+                                                name='date'
+                                                type='date'
+                                                onChange={handleChange}
+                                                value={expData.date}
+                                                error={errorExpenses.date}
+                                                onBlur={() => handleBlur('date')}
+                                                onInput={() => handleBlur('date')}
+                                                InputLabelProps={{
+                                                   shrink: true,
+                                                }}
+                                                helperText={errorExpenses.date && 'Enter the date'} />
+                                             <TextField
+                                                sx={addExpDiaTextField}
+                                                id="outlined-basic"
+                                                variant="outlined"
+                                                label="Name"
+                                                name='name'
+                                                type='text'
+                                                onChange={handleChange}
+                                                value={expData.name}
+                                                error={errorExpenses.name}
+                                                onBlur={() => handleBlur('name')}
+                                                onInput={() => handleBlur('name')}
+                                                placeholder='Eg. Television, Pen Box, Paracetamol...'
+                                                helperText={errorExpenses.name && 'Enter your full name'} />
+                                             <TextField
+                                                sx={addExpDiaTextField}
+                                                id="outlined-basic"
+                                                variant="outlined"
+                                                label="Category"
+                                                name='category'
+                                                type='text'
+                                                onChange={handleChange}
+                                                value={expData.category}
+                                                error={errorExpenses.category}
+                                                onBlur={() => handleBlur('category')}
+                                                onInput={() => handleBlur('category')}
+                                                placeholder='Eg. Electronics, Stationary, Medicine...'
+                                                helperText={errorExpenses.category && 'Enter the category type'} />
+                                             <TextField
+                                                sx={addExpDiaTextField}
+                                                id="outlined-basic"
+                                                variant="outlined"
+                                                label="Amount"
+                                                name='amount'
+                                                type='number'
+                                                onChange={handleChange}
+                                                value={expData.amount}
+                                                error={errorExpenses.amount}
+                                                onBlur={() => handleBlur('amount')}
+                                                onInput={() => handleBlur('amount')}
+                                                placeholder='Eg. 35,999'
+                                                helperText={errorExpenses.amount && 'Enter the price of the item'} />
+                                             <TextField
+                                                sx={addExpDiaTextField}
+                                                id="outlined-basic"
+                                                variant="outlined"
+                                                label="Payment Method"
+                                                name='payMethod'
+                                                type='text'
+                                                onChange={handleChange}
+                                                value={expData.payMethod}
+                                                error={errorExpenses.payMethod}
+                                                onBlur={() => handleBlur('payMethod')}
+                                                onInput={() => handleBlur('payMethod')}
+                                                placeholder='Eg. Credit, Debit, Cash, UPI'
+                                                helperText={errorExpenses.payMethod && 'Enter the Method of Payment'} />
+                                          </Box>
+                                       </DialogContent>
+                                       <DialogActions sx={addExpDialogAction}>
+                                          <Button onClick={closeDialog}>Close</Button>
+                                          <Button type='submit'>Submit</Button>
+                                       </DialogActions>
+                                    </form>
+                                    {/* </FormControl> */}
+                                 </Dialog>
                               </TableRow>
                            ))}
                         </TableBody>
-                        <Dialog sx={addExpDialog} open={editExpenses} onClose={() => setEditExpenses(false)} aria-labelledby='dialog-title' aria-describedby='dialog-description'>
-                           <DialogTitle sx={addExpDialogTitle} id='dialog-title'>Edit Expenses</DialogTitle>
-                           {/* <FormControl> */}
-                           <form onSubmit={handleEditSubmit}>
-                              <DialogContent>
-                                 <Box sx={addExpDiaTextFieldLay}>
-                                    <TextField
-                                       sx={addExpDiaTextField}
-                                       id="outlined-basic"
-                                       variant="outlined"
-                                       label="Date"
-                                       name='date'
-                                       type='date'
-                                       onChange={handleChange}
-                                       value={expData.date}
-                                       error={errorExpenses.date}
-                                       onBlur={() => handleBlur('date')}
-                                       onInput={() => handleBlur('date')}
-                                       InputLabelProps={{
-                                          shrink: true,
-                                       }}
-                                       helperText={errorExpenses.date && 'Enter the date'}
-                                       required />
-                                    <TextField
-                                       sx={addExpDiaTextField}
-                                       id="outlined-basic"
-                                       variant="outlined"
-                                       label="Name"
-                                       name='name'
-                                       type='text'
-                                       onChange={handleChange}
-                                       value={expData.name}
-                                       error={errorExpenses.name}
-                                       onBlur={() => handleBlur('name')}
-                                       onInput={() => handleBlur('name')}
-                                       placeholder='Eg. Television, Pen Box, Paracetamol...'
-                                       helperText={errorExpenses.name && 'Enter your full name'}
-                                       required />
-                                    <TextField
-                                       sx={addExpDiaTextField}
-                                       id="outlined-basic"
-                                       variant="outlined"
-                                       label="Category"
-                                       name='category'
-                                       type='text'
-                                       onChange={handleChange}
-                                       value={expData.category}
-                                       error={errorExpenses.category}
-                                       onBlur={() => handleBlur('category')}
-                                       onInput={() => handleBlur('category')}
-                                       placeholder='Eg. Electronics, Stationary, Medicine...'
-                                       helperText={errorExpenses.category && 'Enter the category type'}
-                                       required />
-                                    <TextField
-                                       sx={addExpDiaTextField}
-                                       id="outlined-basic"
-                                       variant="outlined"
-                                       label="Amount"
-                                       name='amount'
-                                       type='number'
-                                       onChange={handleChange}
-                                       value={expData.amount}
-                                       error={errorExpenses.amount}
-                                       onBlur={() => handleBlur('amount')}
-                                       onInput={() => handleBlur('amount')}
-                                       placeholder='Eg. 35,999'
-                                       helperText={errorExpenses.amount && 'Enter the price of the item'}
-                                       required />
-                                    <TextField
-                                       sx={addExpDiaTextField}
-                                       id="outlined-basic"
-                                       variant="outlined"
-                                       label="Payment Method"
-                                       name='payMethod'
-                                       type='text'
-                                       onChange={handleChange}
-                                       value={expData.payMethod}
-                                       error={errorExpenses.payMethod}
-                                       onBlur={() => handleBlur('payMethod')}
-                                       onInput={() => handleBlur('payMethod')}
-                                       placeholder='Eg. Credit, Debit, Cash, UPI'
-                                       helperText={errorExpenses.payMethod && 'Enter the Method of Payment'}
-                                       required />
-                                 </Box>
-                              </DialogContent>
-                              <DialogActions sx={addExpDialogAction}>
-                                 <Button onClick={() => setEditExpenses(false)}>Close</Button>
-                                 <Button type='submit'>Submit</Button>
-                              </DialogActions>
-                           </form>
-                           {/* </FormControl> */}
-                        </Dialog>
                      </Table>
                   </TableContainer>
                   <Box sx={tablePagination}>

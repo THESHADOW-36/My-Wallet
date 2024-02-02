@@ -5,7 +5,6 @@ import ErrorResponse from "../utils/errorResponse.js";
 // .../api/v1/wallet/expenses
 export const addExpenses = asyncHandler(async (req, res, next) => {
    const { date, name, category, amount, payMethod } = req.body;
-   console.log("req.body : ", req.body)
 
    const expData = await Expenses.create({ userId: req.user, date, name, category, amount, payMethod });
 
@@ -35,29 +34,31 @@ export const getExpenses = asyncHandler(async (req, res, next) => {
    if (payMethod) {
       query['payMethod'] = payMethod;
    }
-   // console.log('req - ', req);
-   // console.log('req.user - ', req.user.id)
-   // console.log('query - ', query)
 
    const allExp = await Expenses.find(query).skip(skip).limit(limit).select("-userId -__v");
 
    sendTokenResponse(allExp, 200, res);
 })
 
+export const getSingleExpenses = asyncHandler(async (req, res, next) => {
+   const { id } = req.params;
+
+   const SingleExp = await Expenses.findById(id).select("-userId -__v");
+
+   sendTokenResponse(SingleExp, 200, res);
+})
+
 export const editExpense = asyncHandler(async (req, res, next) => {
    const { date, name, category, amount, payMethod } = req.body;
    const { id } = req.params;
-   console.log('req - ', req)
-   console.log('id - ', id)
 
-   const expData = await Expenses.findByIdAndUpdate(id, { userId: req.user, date, name, category, amount, payMethod }, { new: true }).select("-_id -userId -__v");
+   const expData = await Expenses.findByIdAndUpdate(id, { userId: req.user, date, name, category, amount, payMethod }, { new: true }).select("-userId -__v");
 
    sendTokenResponse(expData, 200, res);
 })
 
 export const deleteExpense = asyncHandler(async (req, res, next) => {
    const { id } = req.params;
-   console.log('id - ', id)
 
    const expData = await Expenses.findByIdAndDelete(id);
    if (!expData) return res.status(404).json({ success: false, message: "Item Id is not found" })

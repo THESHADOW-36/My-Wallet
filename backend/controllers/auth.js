@@ -7,7 +7,6 @@ import ErrorResponse from "../utils/errorResponse.js";
 // .../api/v1/auth/register
 export const register = asyncHandler(async (req, res, next) => {
     const { firstName, lastName, userName, dob, email, password } = req.body;
-    console.log(req.body.userData)
 
     const user = await User.create({
         firstName,
@@ -43,9 +42,7 @@ export const login = asyncHandler(async (req, res, next) => {
 
 // .../api/v1/auth/current-user
 export const getMe = asyncHandler(async (req, res, next) => {
-    console.log('GetMe ======>', req.user.id)
     const user = await User.findById(req.user.id).select("-_id -createdAt -__v");
-    console.log("user : ", user)
     // const currentUser = user.select("-_id -userId -__v");
     // console.log("currentUser : ", currentUser)
 
@@ -57,7 +54,6 @@ export const editProfile = asyncHandler(async (req, res, next) => {
     // const salt = await genSalt(10);
     // const editedPass = await hash(password, salt);
     const editUser = await User.findByIdAndUpdate(req.user.id, { firstName, lastName, userName, dob, email }, { new: true }).select("-_id -role -createdAt -__v");
-    console.log("editUser - ", editUser)
 
     res.status(200).json({ success: true, data: editUser });
 })

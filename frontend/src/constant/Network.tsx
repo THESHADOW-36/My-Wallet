@@ -131,6 +131,9 @@ const put = (url: string, paramsObj?: {}, headers?: {}) => {
    try {
       return new Observable((observer: any) => {
          const params = { ...paramsObj };
+         console.log("url :", url)
+         console.log("paramsObj :", paramsObj)
+         console.log("headers :", headers)
          // params['AppCode'] = '1';
          // params['SelectedLanguage'] = selectedLanguage.toLowerCase();
          axios.put(url, params, headers)
@@ -189,7 +192,7 @@ const deleteApi = (url: string, paramsObj: {}, headers?: {}) => {
          // params['SelectedLanguage'] = selectedLanguage.toLowerCase();
          axios.delete(url, { params, headers })
             .then((response: any) => {
-               observer.next(response);
+               observer.next(response.data);
                observer.complete();
             }).catch((error) => {
                if (axios.isCancel(error)) {

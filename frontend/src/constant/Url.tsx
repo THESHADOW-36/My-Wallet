@@ -7,6 +7,7 @@ export const editProfile = "http://localhost:8000/api/v1/auth/edit-profile"  // 
 // Expenses
 export const addExp = "http://localhost:8000/api/v1/wallet/expenses"  // Post
 export const getExp = "http://localhost:8000/api/v1/wallet/expenses"  // get
+export const getSingleExp = "http://localhost:8000/api/v1/wallet/expense/"  // get
 export const editExp = "http://localhost:8000/api/v1/wallet/expense/"  // put
 export const delExp = "http://localhost:8000/api/v1/wallet/expense/"  // delete
 
@@ -26,10 +27,12 @@ export const Url = {
    editProfile,
    addExp,
    getExp,
+   getSingleExp,
    editExp,
    delExp,
    addIncome,
    getIncome,
    editIncome,
-   delIncome
+   delIncome,
+   stats
 };

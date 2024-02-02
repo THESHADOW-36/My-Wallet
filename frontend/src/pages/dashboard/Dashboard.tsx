@@ -57,6 +57,7 @@ const Homepage: React.FC = () => {
 
 
    const [accData, setAccData] = useState<AccData>({ exp: 0, income: 0, bal: 0 });
+   // console.log("accData :", accData)
 
    const myToken = localStorage.getItem('MyToken');
    const headers = { Authorization: 'Bearer ' + myToken };
@@ -64,9 +65,9 @@ const Homepage: React.FC = () => {
    const accountDetails = () => {
       API.get(Url.stats, {}, headers)?.subscribe({
          next(res: any) {
-            // setExpDataDB(res.data);
-            console.log("res.expStats :", res.expStats)
-            console.log("res.incomeStats :", res.incomeStats)
+            setAccData(res.expStats);
+            console.log("res.expStats :", res.expStats[0].totalExp)
+            console.log("res.incomeStats :", res.incomeStats[0].totalIncome)
          },
          error: (error: any) => {
             console.log('Error:', error);

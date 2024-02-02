@@ -45,7 +45,7 @@ export const statistics = asyncHandler(async (req, res, next) => {
          $group: {
             _id: null,
             totalIncome: { $sum: "$amount" },
-            recordsExp: { $sum: 1 }
+            recordsIncome: { $sum: 1 }
          }
       }
    ])

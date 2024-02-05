@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import asyncHandler from "../middleware/async.js";
 import Expenses from "../models/expenses.js";
 import Incomes from "../models/incomes.js";
+import User from "../models/User.js";
 
 
 export const statistics = asyncHandler(async (req, res, next) => {
@@ -52,7 +53,7 @@ export const statistics = asyncHandler(async (req, res, next) => {
    ])
 
    const totalIncomeStats = incomeStats.length > 0 ? incomeStats[0].totalIncome : 0;
-   
+
    const totalExpStats = expStats.length > 0 ? expStats[0].totalExp : 0;
 
    const balStats = totalIncomeStats - totalExpStats;
@@ -60,10 +61,91 @@ export const statistics = asyncHandler(async (req, res, next) => {
    res.status(200).json({ success: true, message: "Total expenses", incomeStats, expStats, balStats })
 })
 
+// post 
+export const addTransaction = asyncHandler(async (req, res, next) => {
+
+   const { currentUserId } = req.query;
+
+   const session = await mongoose.startSession();
+   session.startTransaction();
+
+   try {
+
+      // await User.create()
+
+      await session.commitTransaction();
+
+   } catch (error) {
+
+      await session.abortTransaction();
+
+      console.error('Error in transaction:', error);
+
+      return res.status(500).json({ success: false, message: "Transaction failed" });
+
+   } finally {
+      session.endSession();
+   }
+})
+
+// get 
+export const getTransaction = asyncHandler(async (req, res, next) => {
+   const { currentUserId } = req.query;
+
+   const session = await mongoose.startSession();
+   session.startTransaction();
+
+   try {
+
+      // ...
+
+      await session.commitTransaction();
+
+   } catch (error) {
+
+      await session.abortTransaction();
+
+      console.error('Error in transaction:', error)
+
+      return res.status(500).json({ success: false, message: "Transaction failed" })
+
+   } finally {
+      session.endSession();
+   }
+})
+
+// delete 
+export const deleteTransaction = asyncHandler(async (req, res, next) => {
+   const { currentUserId } = req.query;
+
+   const session = await mongoose.startSession();
+   session.startTransaction();
+
+   try {
+
+      await User.deleteOne({ _id: currentUserId }, { session })
+      await Incomes.deleteOne({ userId: currentUserId }, { session })
+      await Expenses.deleteOne({ userId: currentUserId }, { session })
+      
+      await session.commitTransaction();
+
+   } catch (error) {
+
+      await session.abortTransaction();
+
+      console.error('Error in transaction:', error)
+
+      return res.status(500).json({ success: false, message: "Transaction failed" })
+
+   } finally {
+      session.endSession();
+   }
+})
+
 // put
-export const transaction = asyncHandler(async (req, res, next) => {
-   const { userId1, amt } = req.body; // dinesh
+export const editTransaction = asyncHandler(async (req, res, next) => {
    const { currentUserId } = req.query; // jakie
+   const { userId1, amt } = req.body; // dinesh
 
    if (!currentUserId) return res.status(404).json({ success: false, message: "currentUserId is not found" })
    if (!userId1) return res.status(404).json({ success: false, message: "Userid field is required" })

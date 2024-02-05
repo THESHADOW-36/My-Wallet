@@ -14,6 +14,7 @@ export const delExp = "http://localhost:8000/api/v1/wallet/expense/"  // delete
 // Incomes
 export const addIncome = "http://localhost:8000/api/v1/wallet/incomes"  // Post
 export const getIncome = "http://localhost:8000/api/v1/wallet/incomes"  // get
+export const getSingleIncome = "http://localhost:8000/api/v1/wallet/income/"  // get
 export const editIncome = "http://localhost:8000/api/v1/wallet/income/"  // put
 export const delIncome = "http://localhost:8000/api/v1/wallet/income/"  // delete
 
@@ -32,6 +33,7 @@ export const Url = {
    delExp,
    addIncome,
    getIncome,
+   getSingleIncome,
    editIncome,
    delIncome,
    stats

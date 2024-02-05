@@ -15,6 +15,20 @@ const Incomes = new Schema({
    bank: {
       type: String,
       required: [false, "Mention the bank name if you transfer throught bank"],
+      // enum:
+      //    [
+      //       'Bank of Baroda',
+      //       'Bank of Baroda',
+      //       'Canara Bank',
+      //       'Indian Overseas Bank',
+      //       'State Bank of India',
+      //       'Axis Bank',
+      //       'HDFC Bank',
+      //       'ICICI Bank',
+      //       'Tamilnad Mercantile Bank',
+      //       'Yes Bank',
+      //       'Saraswat Bank',
+      //    ],
       trim: true
    },
    amount: {

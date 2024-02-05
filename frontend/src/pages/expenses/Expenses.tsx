@@ -60,7 +60,6 @@ const Expenses: React.FC = () => {
    }
 
    const handleBlur = (title: keyof ExpData) => {
-      // console.log('handleBlurTitle', title)
       if (!expData[title]) {
          setErrorExpenses({ ...errorExpenses, [title]: true })
       }
@@ -81,7 +80,7 @@ const Expenses: React.FC = () => {
             API.post(Url.addExp, expData, headers)?.subscribe({
                next(res: any) {
                   console.log("res :", res)
-                  toast.success('Product added successfully')
+                  toast.success('Expenses added successfully')
                   setExpData({ date: '', name: '', category: '', amount: 0, payMethod: '' })
                   setAddExpenses(false);
                   getExpData();
@@ -152,7 +151,7 @@ const Expenses: React.FC = () => {
          API.put(editExpUrl, expData, config)?.subscribe({
             next(res: any) {
                console.log("res :", res)
-               toast.success('Product added successfully')
+               toast.success('Expense Edited successfully')
                setExpData({ date: '', name: '', category: '', amount: 0, payMethod: '' })
                getExpData();
                closeDialog();
@@ -201,7 +200,7 @@ const Expenses: React.FC = () => {
       API.deleteApi(delExpUrl, {}, headers)?.subscribe({
          next(res: any) {
             getExpData();
-            toast.success('Product added successfully');
+            toast.success('Expense Deleted successfully');
          },
          error: (error: any) => {
             console.log('Error:', error);

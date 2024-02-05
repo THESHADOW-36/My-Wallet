@@ -56,7 +56,6 @@ const UserSchema = new Schema({
         default: Date.now
     }
 });
-console.log("this.password : ", UserSchema.password)
 
 // Encript password
 UserSchema.pre('save', async function (next) {

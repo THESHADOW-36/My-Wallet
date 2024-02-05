@@ -9,17 +9,16 @@ export const protecter = asyncHandler(async (req, res, next) => {
    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];
    }
-   console.log("req : ", req)
-   console.log("token : ", token)
+   // console.log("token : ", token)
    if (!token) {
       return next(new ErrorResponse('Token is not found!', 401));
    }
    try {
       const decode = jwt.verify(token, process.env.JWT_TOKEN_SECRET_KEY);
-      console.log("decode : ", decode);
+      // console.log("decode : ", decode);
 
       req.user = await User.findById(decode.id);
-      console.log("req.user : ", req.user);
+      // console.log("req.user : ", req.user);
       next();
    } catch (error) {
       return next(new ErrorResponse('You dont have aceess to this request', 401));

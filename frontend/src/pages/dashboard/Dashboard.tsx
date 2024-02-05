@@ -5,7 +5,7 @@ import { Bar } from 'react-chartjs-2'
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js'
 import { barChartExpensesData, barChartIncomeData, barChartLabels, dbChartDataContent } from "../data/DbData";
 import { AccountBalanceTwoTone, CurrencyExchangeTwoTone, DataSaverOnTwoTone } from "@mui/icons-material";
-import { mwExpData } from "../data/MyWalletData";
+// import { mwExpData } from "../data/MyWalletData";
 import { API } from "../../constant/Network";
 import { Url } from "../../constant/Url";
 
@@ -23,7 +23,14 @@ interface AccData {
    income: number;
    bal: number;
 }
-
+interface ExpDataDB {
+   _id: string;
+   date: number;
+   name: string;
+   category: string;
+   amount: number | null | undefined;
+   payMethod: string;
+}
 
 
 const Homepage: React.FC = () => {
@@ -55,19 +62,38 @@ const Homepage: React.FC = () => {
       ]
    });
 
-
+   const [expDataDB, setExpDataDB] = useState<ExpDataDB[]>([])
    const [accData, setAccData] = useState<AccData>({ exp: 0, income: 0, bal: 0 });
-   // console.log("accData :", accData)
+   console.log("expDataDB :", expDataDB)
 
+   const paramsObj = { skip: 0, limit: 0 };
    const myToken = localStorage.getItem('MyToken');
    const headers = { Authorization: 'Bearer ' + myToken };
 
    const accountDetails = () => {
       API.get(Url.stats, {}, headers)?.subscribe({
          next(res: any) {
-            setAccData(res.expStats);
+            setAccData({
+               exp: res.expStats[0].totalExp, 
+               income: res.incomeStats[0].totalIncome, 
+               bal: res.balStats
+            });
             console.log("res.expStats :", res.expStats[0].totalExp)
             console.log("res.incomeStats :", res.incomeStats[0].totalIncome)
+         },
+         error: (error: any) => {
+            console.log('Error:', error);
+         },
+         complete: () => {
+            console.log('Completed');
+         }
+      })
+   }
+   const getExpData = () => {
+      API.get(Url.getExp, paramsObj, headers)?.subscribe({
+         next(res: any) {
+            setExpDataDB(res.data);
+            // console.log("res :", res)
          },
          error: (error: any) => {
             console.log('Error:', error);
@@ -80,6 +106,7 @@ const Homepage: React.FC = () => {
 
    useEffect(() => {
       accountDetails();
+      getExpData();
    }, [])
 
    return (
@@ -96,7 +123,7 @@ const Homepage: React.FC = () => {
                            <AccountBalanceTwoTone sx={{ fontSize: '32px' }} />
                         </Box>
                         <Box sx={dbKPIDetails}>
-                           <Typography sx={dbKPICash}>₹ 0,00,000</Typography>
+                           <Typography sx={dbKPICash}>₹ {accData.income}</Typography>
                            {/* <Box sx={dbKPIProgress}>{mwd.bar}</Box> */}
                         </Box>
                      </Box>
@@ -112,7 +139,7 @@ const Homepage: React.FC = () => {
                            <CurrencyExchangeTwoTone sx={{ fontSize: '32px' }} />
                         </Box>
                         <Box sx={dbKPIDetails}>
-                           <Typography sx={dbKPICash}>₹ 0,00,000</Typography>
+                           <Typography sx={dbKPICash}>₹ {accData.exp}</Typography>
                            {/* <Box sx={dbKPIProgress}>{mwd.bar}</Box> */}
                         </Box>
                      </Box>
@@ -128,7 +155,7 @@ const Homepage: React.FC = () => {
                            <DataSaverOnTwoTone sx={{ fontSize: '34px' }} />
                         </Box>
                         <Box sx={dbKPIDetails}>
-                           <Typography sx={dbKPICash}>₹ 0,00,000</Typography>
+                           <Typography sx={dbKPICash}>₹ {accData.bal}</Typography>
                            {/* <Box sx={dbKPIProgress}>{mwd.bar}</Box> */}
                         </Box>
                      </Box>
@@ -193,14 +220,14 @@ const Homepage: React.FC = () => {
                            </TableHead>
 
                            <TableBody>
-                              {mwExpData.map((rtc, index) => (
+                              {expDataDB.map((rtc, index) => (
                                  <TableRow key={index}>
-                                    <TableCell sx={dbRtTableBodyCell}>{rtc.num}</TableCell>
+                                    <TableCell sx={dbRtTableBodyCell}>{index + 1}</TableCell>
                                     <TableCell sx={dbRtTableBodyCell}>{rtc.date}</TableCell>
                                     <TableCell sx={dbRtTableBodyCell}>{rtc.name}</TableCell>
                                     <TableCell sx={dbRtTableBodyCell}>{rtc.category}</TableCell>
-                                    <TableCell sx={dbRtTableBodyCell}>{rtc.expenses}</TableCell>
-                                    <TableCell sx={dbRtTableBodyCell}>{rtc.method}</TableCell>
+                                    <TableCell sx={dbRtTableBodyCell}>{rtc.amount}</TableCell>
+                                    <TableCell sx={dbRtTableBodyCell}>{rtc.payMethod}</TableCell>
                                  </TableRow>
                               ))}
                            </TableBody>

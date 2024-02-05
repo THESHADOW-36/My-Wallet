@@ -36,7 +36,7 @@ export const login = asyncHandler(async (req, res, next) => {
     if (!isMatch) {
         return next(new ErrorResponse('Invalid password', 401));
     }
-
+    
     sendTokenResponse(user, 200, res);
 });
 

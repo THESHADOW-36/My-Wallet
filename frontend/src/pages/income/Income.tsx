@@ -3,10 +3,51 @@ import { addExpDiaTextField, addExpDiaTextFieldLay, addExpDialog, addExpDialogAc
 import { mwIncomeData } from '../data/MyWalletData'
 import { AddCircleTwoTone, DeleteForeverTwoTone, EditTwoTone, Search } from '@mui/icons-material'
 import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-const Expenses = () => {
-   const [addExpenses, setAddExpenses] = useState(false);
-   const [editExpenses, setEditExpenses] = useState(false);
+
+interface IncomeData {
+   date: string;
+   name: string;
+   category: string;
+   amount: number;
+   payMethod: string;
+}
+interface IncomeDataDB {
+   _id: string;
+   date: number;
+   name: string;
+   category: string;
+   amount: number | null | undefined;
+   payMethod: string;
+}
+interface ErrIncome {
+   date: boolean;
+   name: boolean;
+   category: boolean;
+   amount: boolean;
+   payMethod: boolean;
+}
+
+const Incomes: React.FC = () => {
+   const { id } = useParams();
+   const router = useNavigate();
+   const [incomeData, setIncomeData] = useState<IncomeData>({ date: '', name: '', category: '', amount: 0, payMethod: '' })
+   const [errorIncome, setErrorIncome] = useState<ErrIncome>({ date: false, name: false, category: false, amount: false, payMethod: false });
+   const [addIncome, setAddIncome] = useState(false);
+   const [editIncome, setEditIncome] = useState(false);
+   const [incomeDataDB, setIncomeDataDB] = useState<IncomeDataDB[]>([])
+   
+   const paramsObj = { skip: 0, limit: 0 };
+   const myToken = localStorage.getItem('MyToken');
+   const headers = { Authorization: 'Bearer ' + myToken };
+
+   const closeDialog = () => {
+      router('/incomes');
+      setEditIncome(false);
+   }
+
+
    return (
       <Box sx={expenses}>
          <Paper sx={expRecentTable}>
@@ -23,9 +64,9 @@ const Expenses = () => {
                      }}
                      size='small' placeholder='Search...' />
 
-                  <Button variant='contained' sx={expAddButton} onClick={() => setAddExpenses(true)} startIcon={<AddCircleTwoTone sx={{ width: '24px', height: '24px' }} />}>Add</Button>
+                  <Button variant='contained' sx={expAddButton} onClick={() => setAddIncome(true)} startIcon={<AddCircleTwoTone sx={{ width: '24px', height: '24px' }} />}>Add</Button>
 
-                  <Dialog sx={addExpDialog} open={addExpenses} onClose={() => setAddExpenses(false)} aria-labelledby='dialog-title' aria-describedby='dialog-description'>
+                  <Dialog sx={addExpDialog} open={addIncome} onClose={() => setAddIncome(false)} aria-labelledby='dialog-title' aria-describedby='dialog-description'>
                      <DialogTitle sx={addExpDialogTitle} id='dialog-title'>Add Income</DialogTitle>
                      <DialogContent>
                         <Box sx={addExpDiaTextFieldLay}>
@@ -37,8 +78,8 @@ const Expenses = () => {
                         </Box>
                      </DialogContent>
                      <DialogActions sx={addExpDialogAction}>
-                        <Button onClick={() => setAddExpenses(false)}>Close</Button>
-                        <Button onClick={() => setAddExpenses(false)}>Submit</Button>
+                        <Button onClick={() => setAddIncome(false)}>Close</Button>
+                        <Button onClick={() => setAddIncome(false)}>Submit</Button>
                      </DialogActions>
                   </Dialog>
                </Box>
@@ -67,12 +108,12 @@ const Expenses = () => {
                                  <TableCell sx={expRtTableBodyCell}>{rtc.bank}</TableCell>
                                  <TableCell sx={expRtTableBodyCell}>{rtc.credited}</TableCell>
                                  <TableCell sx={expRtTableBodyCell}>{rtc.method}</TableCell>
-                                 <TableCell sx={expRtTableBodyCell}><IconButton onClick={() => setEditExpenses(true)}><EditTwoTone /></IconButton></TableCell>
-                                 <TableCell sx={expRtTableBodyCell}><IconButton sx={{}}><DeleteForeverTwoTone/></IconButton></TableCell>
+                                 <TableCell sx={expRtTableBodyCell}><IconButton onClick={() => setEditIncome(true)}><EditTwoTone /></IconButton></TableCell>
+                                 <TableCell sx={expRtTableBodyCell}><IconButton sx={{}}><DeleteForeverTwoTone /></IconButton></TableCell>
                               </TableRow>
                            ))}
                         </TableBody>
-                        <Dialog sx={addExpDialog} open={editExpenses} onClose={() => setEditExpenses(false)} aria-labelledby='dialog-title' aria-describedby='dialog-description'>
+                        <Dialog sx={addExpDialog} open={editIncome} onClose={() => setEditIncome(false)} aria-labelledby='dialog-title' aria-describedby='dialog-description'>
                            <DialogTitle sx={addExpDialogTitle} id='dialog-title'>Edit Income</DialogTitle>
                            <DialogContent>
                               <Box sx={addExpDiaTextFieldLay}>
@@ -84,8 +125,8 @@ const Expenses = () => {
                               </Box>
                            </DialogContent>
                            <DialogActions sx={addExpDialogAction}>
-                              <Button onClick={() => setEditExpenses(false)}>Close</Button>
-                              <Button onClick={() => setEditExpenses(false)}>Submit</Button>
+                              <Button onClick={() => setEditIncome(false)}>Close</Button>
+                              <Button onClick={() => setEditIncome(false)}>Submit</Button>
                            </DialogActions>
                         </Dialog>
                      </Table>
@@ -108,4 +149,4 @@ const Expenses = () => {
    )
 }
 
-export default Expenses
+export default Incomes

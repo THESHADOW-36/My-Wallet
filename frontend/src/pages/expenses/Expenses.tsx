@@ -23,7 +23,6 @@ interface ExpDataDB {
    amount: number | null | undefined;
    payMethod: string;
 }
-
 interface ErrExp {
    date: boolean;
    name: boolean;
@@ -85,6 +84,7 @@ const Expenses: React.FC = () => {
                   toast.success('Product added successfully')
                   setExpData({ date: '', name: '', category: '', amount: 0, payMethod: '' })
                   setAddExpenses(false);
+                  getExpData();
                },
                error: (error: any) => {
                   toast.error(error.response.data.error)
@@ -200,8 +200,8 @@ const Expenses: React.FC = () => {
       console.log("delExpUrl :", id)
       API.deleteApi(delExpUrl, {}, headers)?.subscribe({
          next(res: any) {
-            toast.success('Product added successfully');
             getExpData();
+            toast.success('Product added successfully');
          },
          error: (error: any) => {
             console.log('Error:', error);

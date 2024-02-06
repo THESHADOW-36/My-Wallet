@@ -7,6 +7,7 @@ import SignUp from './pages/signUp/SignUp';
 import SignIn from './pages/signIn/SignIn';
 import Expenses from './pages/expenses/Expenses';
 import Income from './pages/income/Income';
+import Categories from "./pages/categories/categories";
 
 interface mainProps {
   loggedIn: any,
@@ -25,6 +26,7 @@ function App(prop: mainProps) {
         <Route path="/expenses/:id" element={<Expenses />} />
         <Route path="/income" element={<Income />} />
         <Route path="/income/:id" element={<Income />} />
+        <Route path="/categories" element={<Categories/>} />
       </Routes>
     </Box>
   );

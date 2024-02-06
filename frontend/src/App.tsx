@@ -24,6 +24,7 @@ function App(prop: mainProps) {
         <Route path="/expenses" element={<Expenses />} />
         <Route path="/expenses/:id" element={<Expenses />} />
         <Route path="/income" element={<Income />} />
+        <Route path="/income/:id" element={<Income />} />
       </Routes>
     </Box>
   );

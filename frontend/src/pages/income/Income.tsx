@@ -46,7 +46,7 @@ const Incomes: React.FC = () => {
    const headers = { Authorization: 'Bearer ' + myToken };
 
    const closeDialog = () => {
-      router('/incomes');
+      router('/income');
       setEditIncome(false);
    }
 
@@ -68,7 +68,6 @@ const Incomes: React.FC = () => {
 
             API.post(Url.addIncome, incomeData, headers)?.subscribe({
                next(res: any) {
-                  console.log("res :", res)
                   toast.success('Income added successfully')
                   setIncomeData({ date: '', name: '', bank: '', amount: 0, payMethod: '' })
                   setAddIncome(false)
@@ -119,8 +118,7 @@ const Incomes: React.FC = () => {
       const singleIncomeUrl = Url.getSingleIncome + id;
       API.get(singleIncomeUrl, {}, headers)?.subscribe({
          next(res: any) {
-            console.log(res.singleIncome)
-            setIncomeData(res.singleIncome);
+            setIncomeData(res.data);
          },
          error: (error: any) => {
             console.log('Error:', error);
@@ -129,15 +127,16 @@ const Incomes: React.FC = () => {
             console.log('Completed');
          }
       })
+      setEditIncome(true);
+      router(`/income/${id}`);
    }
 
    const handleEditSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const editIncomeUrl = Url.editIncome + id
       if (incomeData.date && incomeData.name && incomeData.bank && incomeData.amount && incomeData.payMethod) {
-         API.put(editIncomeUrl, incomeData, headers)?.subscribe({
+         API.put(editIncomeUrl, incomeData, {headers})?.subscribe({
             next(res: any) {
-               console.log("res :", res)
                toast.success('Income Edited successfully')
                setIncomeData({ date: '', name: '', bank: '', amount: 0, payMethod: '' })
                getIncomeData();
@@ -183,7 +182,6 @@ const Incomes: React.FC = () => {
 
    const deleteIncome = (id: string) => {
       const delIncomeUrl = Url.delIncome + id
-      console.log("delExpUrl :", id)
       API.deleteApi(delIncomeUrl, {}, headers)?.subscribe({
          next(res: any) {
             getIncomeData();
@@ -199,10 +197,9 @@ const Incomes: React.FC = () => {
    }
 
    const getIncomeData = () => {
-      API.get(Url.getExp, paramsObj, headers)?.subscribe({
+      API.get(Url.getIncome, paramsObj, headers)?.subscribe({
          next(res: any) {
-            setIncomeDataDB(res.allIncome);
-            // console.log("res :", res)
+            setIncomeDataDB(res.data);
          },
          error: (error: any) => {
             console.log('Error:', error);
@@ -235,91 +232,94 @@ const Incomes: React.FC = () => {
                   <Button variant='contained' sx={expAddButton} onClick={() => setAddIncome(true)} startIcon={<AddCircleTwoTone sx={{ width: '24px', height: '24px' }} />}>Add</Button>
 
                   <Dialog sx={addExpDialog} open={addIncome} onClose={() => setAddIncome(false)} aria-labelledby='dialog-title' aria-describedby='dialog-description'>
-                     <DialogTitle sx={addExpDialogTitle} id='dialog-title'>Add Income</DialogTitle>
-                     <DialogContent>
-                        <Box sx={addExpDiaTextFieldLay}>
-                           <TextField
-                              sx={addExpDiaTextField}
-                              id="outlined-basic"
-                              label="Date"
-                              name='date'
-                              variant="outlined"
-                              onChange={handleChange}
-                              value={incomeData.date}
-                              error={errorIncome.date}
-                              onBlur={() => handleBlur('date')}
-                              onInput={() => handleBlur('date')}
-                              InputLabelProps={{
-                                 shrink: true,
-                              }}
-                              // placeholder='DD-MM-YYYY'
-                              helperText={errorIncome.date && 'Enter the date'} />
-                           <TextField
-                              sx={addExpDiaTextField}
-                              id="outlined-basic"
-                              variant="outlined"
-                              label="Name"
-                              name='name'
-                              type='text'
-                              onChange={handleChange}
-                              value={incomeData.name}
-                              error={errorIncome.name}
-                              onBlur={() => handleBlur('name')}
-                              onInput={() => handleBlur('name')}
-                              placeholder='Eg. Television, Pen Box, Paracetamol...'
-                              helperText={errorIncome.name && 'Enter your full name'}
-                           />
-                           <TextField
-                              sx={addExpDiaTextField}
-                              id="outlined-basic"
-                              variant="outlined"
-                              label="Bank"
-                              name='bank'
-                              type='text'
-                              onChange={handleChange}
-                              value={incomeData.bank}
-                              error={errorIncome.bank}
-                              onBlur={() => handleBlur('bank')}
-                              onInput={() => handleBlur('bank')}
-                              placeholder='Eg. Electronics, Stationary, Medicine...'
-                              helperText={errorIncome.bank && 'Enter your bank name'}
-                           />
-                           <TextField
-                              sx={addExpDiaTextField}
-                              id="outlined-basic"
-                              variant="outlined"
-                              label="Amount"
-                              name='amount'
-                              type='number'
-                              onChange={handleChange}
-                              value={incomeData.amount}
-                              error={errorIncome.amount}
-                              onBlur={() => handleBlur('amount')}
-                              onInput={() => handleBlur('amount')}
-                              placeholder='Eg. 35,999'
-                              helperText={errorIncome.amount && 'Enter your amount'}
-                           />
-                           <TextField
-                              sx={addExpDiaTextField}
-                              id="outlined-basic"
-                              variant="outlined"
-                              label="Payment Method"
-                              name='payMethod'
-                              type='text'
-                              onChange={handleChange}
-                              value={incomeData.payMethod}
-                              error={errorIncome.payMethod}
-                              onBlur={() => handleBlur('payMethod')}
-                              onInput={() => handleBlur('payMethod')}
-                              placeholder='Eg. Credit, Debit, Cash, UPI'
-                              helperText={errorIncome.payMethod && 'Enter your payMethod'}
-                           />
-                        </Box>
-                     </DialogContent>
-                     <DialogActions sx={addExpDialogAction}>
-                        <Button onClick={() => setAddIncome(false)}>Close</Button>
-                        <Button onClick={() => setAddIncome(false)}>Submit</Button>
-                     </DialogActions>
+                     <form onSubmit={handleSubmit}>
+                        <DialogTitle sx={addExpDialogTitle} id='dialog-title'>Add Income</DialogTitle>
+                        <DialogContent>
+                           <Box sx={addExpDiaTextFieldLay}>
+                              <TextField
+                                 sx={addExpDiaTextField}
+                                 id="outlined-basic"
+                                 label="Date"
+                                 name='date'
+                                 type='date'
+                                 variant="outlined"
+                                 onChange={handleChange}
+                                 value={incomeData.date}
+                                 error={errorIncome.date}
+                                 onBlur={() => handleBlur('date')}
+                                 onInput={() => handleBlur('date')}
+                                 InputLabelProps={{
+                                    shrink: true,
+                                 }}
+                                 // placeholder='DD-MM-YYYY'
+                                 helperText={errorIncome.date && 'Enter the date'} />
+                              <TextField
+                                 sx={addExpDiaTextField}
+                                 id="outlined-basic"
+                                 variant="outlined"
+                                 label="Name"
+                                 name='name'
+                                 type='text'
+                                 onChange={handleChange}
+                                 value={incomeData.name}
+                                 error={errorIncome.name}
+                                 onBlur={() => handleBlur('name')}
+                                 onInput={() => handleBlur('name')}
+                                 placeholder='Eg. Television, Pen Box, Paracetamol...'
+                                 helperText={errorIncome.name && 'Enter your full name'}
+                              />
+                              <TextField
+                                 sx={addExpDiaTextField}
+                                 id="outlined-basic"
+                                 variant="outlined"
+                                 label="Bank"
+                                 name='bank'
+                                 type='text'
+                                 onChange={handleChange}
+                                 value={incomeData.bank}
+                                 error={errorIncome.bank}
+                                 onBlur={() => handleBlur('bank')}
+                                 onInput={() => handleBlur('bank')}
+                                 placeholder='Eg. Electronics, Stationary, Medicine...'
+                                 helperText={errorIncome.bank && 'Enter your bank name'}
+                              />
+                              <TextField
+                                 sx={addExpDiaTextField}
+                                 id="outlined-basic"
+                                 variant="outlined"
+                                 label="Amount"
+                                 name='amount'
+                                 type='number'
+                                 onChange={handleChange}
+                                 value={incomeData.amount}
+                                 error={errorIncome.amount}
+                                 onBlur={() => handleBlur('amount')}
+                                 onInput={() => handleBlur('amount')}
+                                 placeholder='Eg. 35,999'
+                                 helperText={errorIncome.amount && 'Enter your amount'}
+                              />
+                              <TextField
+                                 sx={addExpDiaTextField}
+                                 id="outlined-basic"
+                                 variant="outlined"
+                                 label="Payment Method"
+                                 name='payMethod'
+                                 type='text'
+                                 onChange={handleChange}
+                                 value={incomeData.payMethod}
+                                 error={errorIncome.payMethod}
+                                 onBlur={() => handleBlur('payMethod')}
+                                 onInput={() => handleBlur('payMethod')}
+                                 placeholder='Eg. Credit, Debit, Cash, UPI'
+                                 helperText={errorIncome.payMethod && 'Enter your payMethod'}
+                              />
+                           </Box>
+                        </DialogContent>
+                        <DialogActions sx={addExpDialogAction}>
+                           <Button onClick={() => setAddIncome(false)}>Close</Button>
+                           <Button type='submit'>Submit</Button>
+                        </DialogActions>
+                     </form>
                   </Dialog>
                </Box>
                <Box sx={expTableContent}>
@@ -348,92 +348,95 @@ const Incomes: React.FC = () => {
                                  <TableCell sx={expRtTableBodyCell}>{rtc.amount}</TableCell>
                                  <TableCell sx={expRtTableBodyCell}>{rtc.payMethod}</TableCell>
                                  <TableCell sx={expRtTableBodyCell}><IconButton onClick={() => editSingleIncome(rtc._id)}><EditTwoTone /></IconButton></TableCell>
-                                 <TableCell sx={expRtTableBodyCell}><IconButton onClick={() => deleteIncome(rtc._id)} sx={{}}><DeleteForeverTwoTone /></IconButton></TableCell>
+                                 <TableCell sx={expRtTableBodyCell}><IconButton onClick={() => deleteIncome(rtc._id)} ><DeleteForeverTwoTone /></IconButton></TableCell>
                               </TableRow>
                            ))}
                         </TableBody>
                         <Dialog sx={addExpDialog} open={editIncome} onClose={closeDialog} aria-labelledby='dialog-title' aria-describedby='dialog-description'>
                            <DialogTitle sx={addExpDialogTitle} id='dialog-title'>Edit Income</DialogTitle>
-                           <DialogContent>
-                              <Box sx={addExpDiaTextFieldLay}>
-                                 <TextField
-                                    sx={addExpDiaTextField}
-                                    id="outlined-basic"
-                                    label="Date"
-                                    name='date'
-                                    variant="outlined"
-                                    onChange={handleChange}
-                                    value={incomeData.date}
-                                    error={errorIncome.date}
-                                    onBlur={() => handleBlur('date')}
-                                    onInput={() => handleBlur('date')}
-                                    InputLabelProps={{
-                                       shrink: true,
-                                    }}
-                                    // placeholder='DD-MM-YYYY'
-                                    helperText={errorIncome.date && 'Enter the date'} />
-                                 <TextField
-                                    sx={addExpDiaTextField}
-                                    id="outlined-basic"
-                                    variant="outlined"
-                                    label="Name"
-                                    name='name'
-                                    type='text'
-                                    onChange={handleChange}
-                                    value={incomeData.name}
-                                    error={errorIncome.name}
-                                    onBlur={() => handleBlur('name')}
-                                    onInput={() => handleBlur('name')}
-                                    placeholder='Eg. Television, Pen Box, Paracetamol...'
-                                    helperText={errorIncome.name && 'Enter your full name'} />
-                                 <TextField
-                                    sx={addExpDiaTextField}
-                                    id="outlined-basic"
-                                    variant="outlined"
-                                    label="Bank"
-                                    name='bank'
-                                    type='text'
-                                    onChange={handleChange}
-                                    value={incomeData.bank}
-                                    error={errorIncome.bank}
-                                    onBlur={() => handleBlur('bank')}
-                                    onInput={() => handleBlur('bank')}
-                                    placeholder='Eg. Electronics, Stationary, Medicine...'
-                                    helperText={errorIncome.bank && 'Enter your bank name'} />
-                                 <TextField
-                                    sx={addExpDiaTextField}
-                                    id="outlined-basic"
-                                    variant="outlined"
-                                    label="Amount"
-                                    name='amount'
-                                    type='number'
-                                    onChange={handleChange}
-                                    value={incomeData.amount}
-                                    error={errorIncome.amount}
-                                    onBlur={() => handleBlur('amount')}
-                                    onInput={() => handleBlur('amount')}
-                                    placeholder='Eg. 35,999'
-                                    helperText={errorIncome.amount && 'Enter your amount'} />
-                                 <TextField
-                                    sx={addExpDiaTextField}
-                                    id="outlined-basic"
-                                    variant="outlined"
-                                    label="Payment Method"
-                                    name='payMethod'
-                                    type='text'
-                                    onChange={handleChange}
-                                    value={incomeData.payMethod}
-                                    error={errorIncome.payMethod}
-                                    onBlur={() => handleBlur('payMethod')}
-                                    onInput={() => handleBlur('payMethod')}
-                                    placeholder='Eg. Credit, Debit, Cash, UPI'
-                                    helperText={errorIncome.payMethod && 'Enter your payMethod'} />
-                              </Box>
-                           </DialogContent>
-                           <DialogActions sx={addExpDialogAction}>
-                              <Button onClick={closeDialog}>Close</Button>
-                              <Button type='submit'>Submit</Button>
-                           </DialogActions>
+                           <form onSubmit={handleEditSubmit}>
+                              <DialogContent>
+                                 <Box sx={addExpDiaTextFieldLay}>
+                                    <TextField
+                                       sx={addExpDiaTextField}
+                                       id="outlined-basic"
+                                       label="Date"
+                                       name='date'
+                                       type='date'
+                                       variant="outlined"
+                                       onChange={handleChange}
+                                       value={incomeData.date}
+                                       error={errorIncome.date}
+                                       onBlur={() => handleBlur('date')}
+                                       onInput={() => handleBlur('date')}
+                                       InputLabelProps={{
+                                          shrink: true,
+                                       }}
+                                       // placeholder='DD-MM-YYYY'
+                                       helperText={errorIncome.date && 'Enter the date'} />
+                                    <TextField
+                                       sx={addExpDiaTextField}
+                                       id="outlined-basic"
+                                       variant="outlined"
+                                       label="Name"
+                                       name='name'
+                                       type='text'
+                                       onChange={handleChange}
+                                       value={incomeData.name}
+                                       error={errorIncome.name}
+                                       onBlur={() => handleBlur('name')}
+                                       onInput={() => handleBlur('name')}
+                                       placeholder='Eg. Television, Pen Box, Paracetamol...'
+                                       helperText={errorIncome.name && 'Enter your full name'} />
+                                    <TextField
+                                       sx={addExpDiaTextField}
+                                       id="outlined-basic"
+                                       variant="outlined"
+                                       label="Bank"
+                                       name='bank'
+                                       type='text'
+                                       onChange={handleChange}
+                                       value={incomeData.bank}
+                                       error={errorIncome.bank}
+                                       onBlur={() => handleBlur('bank')}
+                                       onInput={() => handleBlur('bank')}
+                                       placeholder='Eg. Electronics, Stationary, Medicine...'
+                                       helperText={errorIncome.bank && 'Enter your bank name'} />
+                                    <TextField
+                                       sx={addExpDiaTextField}
+                                       id="outlined-basic"
+                                       variant="outlined"
+                                       label="Amount"
+                                       name='amount'
+                                       type='number'
+                                       onChange={handleChange}
+                                       value={incomeData.amount}
+                                       error={errorIncome.amount}
+                                       onBlur={() => handleBlur('amount')}
+                                       onInput={() => handleBlur('amount')}
+                                       placeholder='Eg. 35,999'
+                                       helperText={errorIncome.amount && 'Enter your amount'} />
+                                    <TextField
+                                       sx={addExpDiaTextField}
+                                       id="outlined-basic"
+                                       variant="outlined"
+                                       label="Payment Method"
+                                       name='payMethod'
+                                       type='text'
+                                       onChange={handleChange}
+                                       value={incomeData.payMethod}
+                                       error={errorIncome.payMethod}
+                                       onBlur={() => handleBlur('payMethod')}
+                                       onInput={() => handleBlur('payMethod')}
+                                       placeholder='Eg. Credit, Debit, Cash, UPI'
+                                       helperText={errorIncome.payMethod && 'Enter your payMethod'} />
+                                 </Box>
+                              </DialogContent>
+                              <DialogActions sx={addExpDialogAction}>
+                                 <Button onClick={closeDialog}>Close</Button>
+                                 <Button type='submit'>Submit</Button>
+                              </DialogActions>
+                           </form>
                         </Dialog>
                      </Table>
                   </TableContainer>

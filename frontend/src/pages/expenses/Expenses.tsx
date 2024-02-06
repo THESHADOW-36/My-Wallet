@@ -39,11 +39,10 @@ const Expenses: React.FC = () => {
    const [addExpenses, setAddExpenses] = useState(false);
    const [editExpenses, setEditExpenses] = useState(false);
    const [expDataDB, setExpDataDB] = useState<ExpDataDB[]>([])
-   // console.log("expData :", expData)
+
    const paramsObj = { skip: 0, limit: 0 };
    const myToken = localStorage.getItem('MyToken');
    const headers = { Authorization: 'Bearer ' + myToken };
-   // console.log("headers :", headers)
    const config = {
       // params: { Url.editExp + "65bb8b1c04bde21d6bf97245" },
       headers: { Authorization: 'Bearer ' + myToken }

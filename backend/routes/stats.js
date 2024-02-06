@@ -5,9 +5,9 @@ import { statistics, editTransaction, addTransaction, getTransaction, deleteTran
 const stats = Router();
 
 stats.get('/stats', protecter, statistics)
-stats.post('/transaction', protecter, addTransaction)
-stats.get('/transaction', protecter, getTransaction)
-stats.put('/transaction', protecter, editTransaction)
-stats.delete('/transaction', protecter, deleteTransaction)
+stats.post('/transaction', addTransaction)
+stats.get('/transaction', getTransaction)
+stats.put('/transaction', editTransaction)
+stats.delete('/transaction', deleteTransaction)
 
 export default stats;

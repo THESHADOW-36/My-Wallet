@@ -64,22 +64,22 @@ export const statistics = asyncHandler(async (req, res, next) => {
 // post 
 export const addTransaction = asyncHandler(async (req, res, next) => {
 
-   const { currentUserId } = req.query;
+   const { firstName, lastName, userName, role, dob, email, password } = req.body;
 
    const session = await mongoose.startSession();
    session.startTransaction();
 
    try {
 
-      // await User.create()
+      const transData = await User.create([{ firstName, lastName, userName, role, dob, email, password }], { session })
 
       await session.commitTransaction();
+
+      return res.status(200).json({ success: true, message: "Transaction Successful", transData });
 
    } catch (error) {
 
       await session.abortTransaction();
-
-      console.error('Error in transaction:', error);
 
       return res.status(500).json({ success: false, message: "Transaction failed" });
 
@@ -90,24 +90,27 @@ export const addTransaction = asyncHandler(async (req, res, next) => {
 
 // get 
 export const getTransaction = asyncHandler(async (req, res, next) => {
-   const { currentUserId } = req.query;
+   const { firstName } = req.body;
+   console.log("firstName :", firstName)
 
    const session = await mongoose.startSession();
    session.startTransaction();
 
    try {
 
-      // ...
+      const getTransData = await User.findOne({ firstName }).session(session).select("-__v -createdAt");
+
+      if (!getTransData) throw new Error("User is not found")
 
       await session.commitTransaction();
+
+      return res.status(200).json({ success: true, message: "Transaction Successful....", getTransData });
 
    } catch (error) {
 
       await session.abortTransaction();
 
-      console.error('Error in transaction:', error)
-
-      return res.status(500).json({ success: false, message: "Transaction failed" })
+      return res.status(500).json({ success: false, message: error.message })
 
    } finally {
       session.endSession();
@@ -116,26 +119,43 @@ export const getTransaction = asyncHandler(async (req, res, next) => {
 
 // delete 
 export const deleteTransaction = asyncHandler(async (req, res, next) => {
-   const { currentUserId } = req.query;
+   const { userId, incomeId, expId } = req.query;
+   console.log("Initial...")
 
    const session = await mongoose.startSession();
    session.startTransaction();
 
    try {
 
-      await User.deleteOne({ _id: currentUserId }, { session })
-      await Incomes.deleteOne({ userId: currentUserId }, { session })
-      await Expenses.deleteOne({ userId: currentUserId }, { session })
-      
+      const user = await User.findById({ _id: userId }).session(session)
+
+      if (!user) throw new Error("User is not found")
+
+      {// const incomes = await Incomes.findById({ _id: incomeId }).session(session)
+         // if (!incomes) throw new Error("Incomes is not found")
+         // const expenses = await Expenses.findById({ _id: expId }).session(session)
+         // if (!expenses) throw new Error("Expenses is not found")
+         // if (expenses.userId != userId) throw new Error("Expense's UserId is not Identical")
+         // if (incomes.userId != userId) throw new Error("Income's UserId is not Identical")
+      }
+
+      await User.deleteMany({ _id: userId }, { session })
+
+      await Incomes.deleteMany({ userId: userId }, { session })
+
+      await Expenses.deleteMany({ userId: userId }, { session })
+
+      console.log("Expenses deleted successfully")
+
       await session.commitTransaction();
+
+      return res.status(200).json({ success: true, message: "deleted Successfully" })
 
    } catch (error) {
 
       await session.abortTransaction();
 
-      console.error('Error in transaction:', error)
-
-      return res.status(500).json({ success: false, message: "Transaction failed" })
+      return res.status(500).json({ success: false, message: error.message })
 
    } finally {
       session.endSession();
@@ -155,11 +175,20 @@ export const editTransaction = asyncHandler(async (req, res, next) => {
 
    session.startTransaction();
 
+
    try {
 
-      await Incomes.updateOne({ _id: currentUserId }, { $inc: { amount: -amt } }, { session });
+      const user1 = await Incomes.findById({ _id: currentUserId }).session(session)
 
-      await Incomes.updateOne({ _id: userId1 }, { $inc: { amount: amt } }, { session });
+      const user2 = await Incomes.findById({ _id: userId1 }).session(session)
+
+      if (!user1) throw new Error("User1 is not found")
+
+      if (!user2) throw new Error("User2 is not found")
+
+      await Incomes.findOneAndUpdate({ _id: currentUserId }, { $inc: { amount: -amt } }, { session });
+
+      await Incomes.findOneAndUpdate({ _id: userId1 }, { $inc: { amount: amt } }, { session });
 
       await session.commitTransaction();
 
@@ -173,7 +202,7 @@ export const editTransaction = asyncHandler(async (req, res, next) => {
 
       console.error('Error in transaction:', error);
 
-      return res.status(500).json({ success: false, message: "Transaction failed" });
+      return res.status(500).json({ success: false, message: error.message });
 
    } finally {
 

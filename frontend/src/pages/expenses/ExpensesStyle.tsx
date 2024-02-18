@@ -129,7 +129,7 @@ export const expRtTableBodyRow = {
 export const expRtTableBodyCell = {
    // border: '1px solid red',
    textWrap: 'nowrap',
-   padding: '6px 18px'
+   padding: '8px 18px'
 }
 
 export const tablePagination = {

@@ -51,7 +51,7 @@ const SignUp = () => {
       if (userData.firstName && userData.lastName && userData.userName && userData.dob && userData.email && userData.password && userData.confirmPassword) {
          API.post(Url.register, userData)?.subscribe({
             next(res: any) {
-               console.log(res.token)
+               console.log(res?.token)
                toast.success("Resgistered Successfull")
                setUserData({ firstName: '', lastName: '', userName: '', dob: '', email: '', password: '', confirmPassword: '' })
             },

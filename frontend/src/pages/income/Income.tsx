@@ -74,8 +74,8 @@ const Incomes: React.FC = () => {
                   getIncomeData();
                },
                error(error: any) {
-                  toast.error(error.response.data.error)
-                  console.log('Error:', error.response.data.error);
+                  toast.error(error.response?.data?.error)
+                  console.log('Error:', error.response?.data?.error);
                },
                complete() {
                   console.log('Completed');
@@ -135,7 +135,7 @@ const Incomes: React.FC = () => {
       event.preventDefault();
       const editIncomeUrl = Url.editIncome + id
       if (incomeData.date && incomeData.name && incomeData.bank && incomeData.amount && incomeData.payMethod) {
-         API.put(editIncomeUrl, incomeData, {headers})?.subscribe({
+         API.put(editIncomeUrl, incomeData, { headers })?.subscribe({
             next(res: any) {
                toast.success('Income Edited successfully')
                setIncomeData({ date: '', name: '', bank: '', amount: 0, payMethod: '' })
@@ -199,7 +199,13 @@ const Incomes: React.FC = () => {
    const getIncomeData = () => {
       API.get(Url.getIncome, paramsObj, headers)?.subscribe({
          next(res: any) {
-            setIncomeDataDB(res.data);
+            const modifiedData = res.data.map((content: any) => {
+               console.log("content :", content)
+               const dateTime = new Date(content.date);
+               const date = dateTime.toISOString().split("T")[0];
+               return { ...content, date: date };
+            });
+            setIncomeDataDB(modifiedData);
          },
          error: (error: any) => {
             console.log('Error:', error);

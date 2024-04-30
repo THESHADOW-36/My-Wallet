@@ -74,15 +74,15 @@ const Homepage: React.FC = () => {
       API.get(Url.stats, {}, headers)?.subscribe({
          next(res: any) {
             setAccData({
-               exp: res.expStats[0].totalExp, 
-               income: res.incomeStats[0].totalIncome, 
+               exp: res.expStats[0] ? res.expStats[0].totalExp : 0,
+               income: res.incomeStats[0] ? res.incomeStats[0].totalIncome : 0,
                bal: res.balStats
             });
-            console.log("res.expStats :", res.expStats[0].totalExp)
-            console.log("res.incomeStats :", res.incomeStats[0].totalIncome)
+            // console.log("res.expStats :", res.expStats[0]?.totalExp)
+            // console.log("res.incomeStats :", res.incomeStats[0]?.totalIncome)
          },
          error: (error: any) => {
-            console.log('Error:', error);
+            console.log('Error:', error.message);
          },
          complete: () => {
             console.log('Completed');
@@ -92,7 +92,7 @@ const Homepage: React.FC = () => {
    const getExpData = () => {
       API.get(Url.getExp, paramsObj, headers)?.subscribe({
          next(res: any) {
-            setExpDataDB(res.data);
+            setExpDataDB(res?.data);
             // console.log("res :", res)
          },
          error: (error: any) => {

@@ -85,8 +85,8 @@ const Expenses: React.FC = () => {
                   getExpData();
                },
                error: (error: any) => {
-                  toast.error(error.response.data.error)
-                  console.log('Error:', error.response.data.error);
+                  toast.error(error.response?.data?.error)
+                  console.log('Error:', error.response?.data?.error);
                },
                complete: () => {
                   console.log('Completed');
@@ -213,8 +213,13 @@ const Expenses: React.FC = () => {
    const getExpData = () => {
       API.get(Url.getExp, paramsObj, headers)?.subscribe({
          next(res: any) {
-            setExpDataDB(res.data);
-            // console.log("res :", res)
+            const modifiedData = res.data.map((content: any) => {
+               console.log("content :", content)
+               const dateTime = new Date(content.date);
+               const date = dateTime.toISOString().split("T")[0];
+               return { ...content, date: date };
+            });
+            setExpDataDB(modifiedData);
          },
          error: (error: any) => {
             console.log('Error:', error);

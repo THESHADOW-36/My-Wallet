@@ -4,7 +4,7 @@ export const categories = {
 }
 
 export const catBoxLayout = {
-    border: '1px solid red',
+    // border: '1px solid red',
 }
 
 export const catKPIpaper = {

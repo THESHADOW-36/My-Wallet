@@ -20,6 +20,7 @@ export const delIncome = "http://localhost:8000/api/v1/wallet/income/"  // delet
 
 // Statistics
 export const stats = "http://localhost:8000/api/v1/wallet/stats"  // get
+export const chartStats = "http://localhost:8000/api/v1/wallet/chart-stats"  // get
 
 export const Url = {
    register,
@@ -36,5 +37,6 @@ export const Url = {
    getSingleIncome,
    editIncome,
    delIncome,
-   stats
+   stats,
+   chartStats
 };

@@ -1,5 +1,8 @@
 // import { AccountBalanceTwoTone, CurrencyExchangeTwoTone, DataSaverOnTwoTone } from "@mui/icons-material";
 import { Box, LinearProgress } from "@mui/material";
+import { API } from "../../constant/Network";
+import { Url } from "../../constant/Url";
+import { useState } from "react";
 
 export const mwKPIData = [
    {
@@ -59,38 +62,18 @@ export const mwKPIData = [
 ]
 export const barChartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-export const barChartIncomeData = [50000, 58000, 52000, 61000, 70000, 66000, 60000, 50000, 58000, 52000, 61000, 70000, 66000, 64000, 80000]
+export const barChartIncomeData = [50000, 58000, 52000, 61000, 70000, 66000, 60000, 50000, 58000, 52000, 61000, 70000]
 
-export const barChartExpensesData = [30000, 45000, 40000, 50000, 47000, 55000, 50000, 30000, 45000, 40000, 50000, 47000, 55000, 57000, 80000]
+export const barChartExpensesData = [30000, 45000, 40000, 50000, 47000, 55000, 50000, 30000, 45000, 40000, 50000, 47000]
 
-export const dbChartDataContent = [
-   {
-      month: 'January 2024',
-      income: 'Income',
-      incomeCurrency: '₹ 0,00,000',
-      expenses: 'Expenses',
-      expensesCurrency: '₹ 0,00,000',
-      profit: 'Profit',
-      profitCurrency: '₹ 0,00,000',
-      loss: 'Loss',
-      lossCurrency: '₹ 0,00,000'
-
-   },
-   // {
-   //    name: 'Income',
-   //    currency: '₹ 0,00,000',
-
-   // },
-   // {
-   //    name: 'Expenses',
-   //    currency: '₹ 0,00,000'
-   // },
-   // {
-   //    name: 'Profit',
-   //    currency: '₹ 0,00,000'
-   // },
-   // {
-   //    name: 'Loss',
-   //    currency: '₹ 0,00,000'
-   // }
-]
+export const dbChartDataContent = [{
+   month: 'January 2024',
+   income: 'Income',
+   incomeCurrency: '₹ 0,00,000',
+   expenses: 'Expenses',
+   expensesCurrency: '₹ 0,00,000',
+   profit: 'Profit',
+   profitCurrency: '₹ 0,00,000',
+   loss: 'Loss',
+   lossCurrency: '₹ 0,00,000'
+}]

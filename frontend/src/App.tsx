@@ -8,6 +8,8 @@ import SignIn from './pages/signIn/SignIn';
 import Expenses from './pages/expenses/Expenses';
 import Income from './pages/income/Income';
 import Categories from "./pages/categories/categories";
+import PageNotFound from "./PageNotFound";
+import Settings from "./pages/settings/Settings";
 
 interface mainProps {
   loggedIn: any,
@@ -19,6 +21,7 @@ function App(prop: mainProps) {
   return (
     <Box className="App">
       <Routes>
+        <Route path="*" element={<PageNotFound />} />
         <Route path="/" element={<Homepage />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn loggedIn={prop.loggedIn} setLoggedIn={prop.setLoggedIn} />} />
@@ -26,7 +29,8 @@ function App(prop: mainProps) {
         <Route path="/expenses/:id" element={<Expenses />} />
         <Route path="/income" element={<Income />} />
         <Route path="/income/:id" element={<Income />} />
-        <Route path="/categories" element={<Categories/>} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
     </Box>
   );

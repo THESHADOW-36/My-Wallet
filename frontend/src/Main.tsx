@@ -40,10 +40,10 @@ const mMiniSidebar = {
 }
 
 const mApp = {
-   backgroundColor: '#E5E5CB',
+   backgroundColor: '#eeeedd',
    // backgroundImage: `url(${"https://media.istockphoto.com/id/1368169112/vector/money-green-seamless-pattern-vector-background-included-line-icons-as-piggy-bank-wallet.jpg?s=612x612&w=0&k=20&c=qjIUpnUPtiKGBgLnXGLQ_4qQUq36OvP82DIFTAdch70="})`,
    width: '100%',
-   height: { xs: '91.6vh', sm: '' }
+   minHeight: { xs: '91.6vh', sm: '' }
 }
 
 

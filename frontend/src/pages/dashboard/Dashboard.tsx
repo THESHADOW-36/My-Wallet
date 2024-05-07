@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { Box, Card, CardContent, Divider, Grid, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { dashboard, dbChart, dbBarChart, dbChartData, dbChartDataCurrency, dbChartDataLayout, dbChartDataName, dbChartDataYear, dbChartYear, dbKPICash, dbKPIName, dbKPIPaper, dbRecentTable, mwContent, dbRtTableHeadCell, dbRtTableBodyCell, dbKPIContent, dbKPIDetails, dbKPIIcon1, dbKPIIcon2, dbKPIIcon3, dbChartLayout, tablePagination, tablePaginationText, dbRecentTableContainer, dbTableContent } from './DashboardStyle'
-import { Bar } from 'react-chartjs-2'
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js'
-import { barChartExpensesData, barChartIncomeData, barChartLabels, dbChartDataContent } from "../data/DbData";
 import { AccountBalanceTwoTone, CurrencyExchangeTwoTone, DataSaverOnTwoTone } from "@mui/icons-material";
 // import { mwExpData } from "../data/MyWalletData";
 import { API } from "../../constant/Network";
 import { Url } from "../../constant/Url";
+import BarChart from "../../components/barChart/BarChart";
 
 ChartJS.register(
    CategoryScale,
@@ -17,6 +16,14 @@ ChartJS.register(
    Tooltip,
    Legend
 );
+
+interface ChartData {
+   month: string,
+   income: number,
+   expense: number,
+   profit: number,
+   loss: number
+}
 
 interface AccData {
    exp: number;
@@ -34,6 +41,14 @@ interface ExpDataDB {
 
 
 const Homepage: React.FC = () => {
+   const [chartDataContents, setChartDataContents] = useState<ChartData>({
+      month: '',
+      income: 0,
+      expense: 0,
+      profit: 0,
+      loss: 0
+   });
+
    // const [progress, setProgress] = useState(0);
    // useEffect(() => {
    //    setInterval(() => {
@@ -41,31 +56,9 @@ const Homepage: React.FC = () => {
    //    }, 800)
    // }, [])
 
-   // eslint-disable-next-line
-   const [barChartData, setBarChartData] = useState({
-      labels: barChartLabels,
-      datasets: [
-         {
-            label: 'Income by Month',
-            data: barChartIncomeData,
-            backgroundColor: ['#3EB748'],
-            borderColor: ['#3EB748'],
-            borderWidth: 1,
-         },
-         {
-            label: 'Expenses by Month',
-            data: barChartExpensesData,
-            backgroundColor: ['#991E1A'],
-            borderColor: ['#991E1A'],
-            borderWidth: 1
-         }
-      ]
-   });
-
    const [expDataDB, setExpDataDB] = useState<ExpDataDB[]>([])
    const [accData, setAccData] = useState<AccData>({ exp: 0, income: 0, bal: 0 });
-   console.log("expDataDB :", expDataDB)
-
+   // console.log("expDataDB :", expDataDB)
    const paramsObj = { skip: 0, limit: 0 };
    const myToken = localStorage.getItem('MyToken');
    const headers = { Authorization: 'Bearer ' + myToken };
@@ -78,14 +71,19 @@ const Homepage: React.FC = () => {
                income: res.incomeStats[0] ? res.incomeStats[0].totalIncome : 0,
                bal: res.balStats
             });
-            // console.log("res.expStats :", res.expStats[0]?.totalExp)
-            // console.log("res.incomeStats :", res.incomeStats[0]?.totalIncome)
+            setChartDataContents({
+               month: 'January 2024',
+               expense: res.expStats[0] ? res.expStats[0].totalExp : 0,
+               income: res.incomeStats[0] ? res.incomeStats[0].totalIncome : 0,
+               profit: res.balStats >= 0 ? res.balStats : 0,
+               loss: res.balStats <= 0 ? res.balStats : 0,
+            });
          },
          error: (error: any) => {
             console.log('Error:', error.message);
          },
          complete: () => {
-            console.log('Completed');
+            // console.log('Completed');
          }
       })
    }
@@ -168,24 +166,22 @@ const Homepage: React.FC = () => {
                <Divider />
                <Box sx={dbChart}>
                   <Box sx={dbBarChart}>
-                     <Bar data={barChartData} />
+                     <Box sx={{ width: '100%', height: '100%' }}><BarChart /></Box>
                      <Typography sx={dbChartYear}>Year 2024</Typography>
                   </Box>
                   <Box sx={dbChartDataLayout}>
                      <Card sx={dbChartData}>
-                        {dbChartDataContent.map((chartData, index) => (
-                           <CardContent key={index}>
-                              <Typography sx={dbChartDataYear}>{chartData.month}</Typography>
-                              <Typography sx={dbChartDataName}>{chartData.income}</Typography>
-                              <Typography sx={dbChartDataCurrency}>{chartData.incomeCurrency}</Typography>
-                              <Typography sx={dbChartDataName}>{chartData.expenses}</Typography>
-                              <Typography sx={dbChartDataCurrency}>{chartData.expensesCurrency}</Typography>
-                              <Typography sx={dbChartDataName}>{chartData.profit}</Typography>
-                              <Typography sx={dbChartDataCurrency}>{chartData.profitCurrency}</Typography>
-                              <Typography sx={dbChartDataName}>{chartData.loss}</Typography>
-                              <Typography sx={dbChartDataCurrency}>{chartData.lossCurrency}</Typography>
-                           </CardContent>
-                        ))}
+                        <CardContent>
+                           <Typography sx={dbChartDataYear}>{chartDataContents.month}</Typography>
+                           <Typography sx={dbChartDataName}>Income</Typography>
+                           <Typography sx={dbChartDataCurrency}>₹ {chartDataContents.income}</Typography>
+                           <Typography sx={dbChartDataName}>Expenses</Typography>
+                           <Typography sx={dbChartDataCurrency}>₹ {chartDataContents.expense}</Typography>
+                           <Typography sx={dbChartDataName}>profit</Typography>
+                           <Typography sx={dbChartDataCurrency}>₹ {chartDataContents.profit}</Typography>
+                           <Typography sx={dbChartDataName}>loss</Typography>
+                           <Typography sx={dbChartDataCurrency}>₹ {chartDataContents.loss}</Typography>
+                        </CardContent>
                      </Card>
                   </Box>
                </Box>

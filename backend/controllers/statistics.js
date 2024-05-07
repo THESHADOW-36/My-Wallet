@@ -8,8 +8,8 @@ import User from "../models/User.js";
 export const statistics = asyncHandler(async (req, res, next) => {
    const currentUserId = new mongoose.Types.ObjectId(req.user.id);
    const currentDate = new Date();
-   const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-   const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+   const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 2);
+   const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
    // console.log("currentDate", currentDate)
    // console.log("startDate", startDate)
    // console.log("endDate", endDate)
@@ -18,10 +18,10 @@ export const statistics = asyncHandler(async (req, res, next) => {
       {
          $match: {
             userId: currentUserId,
-            // date: {
-            //    $gte: startDate,
-            //    $lte: endDate,
-            // }
+            date: {
+               $gte: startDate,
+               $lte: endDate,
+            }
          }
       },
       {
@@ -60,6 +60,70 @@ export const statistics = asyncHandler(async (req, res, next) => {
 
    res.status(200).json({ success: true, message: "Total expenses", incomeStats, expStats, balStats })
 })
+
+export const chartStats = asyncHandler(async (req, res, next) => {
+   const currentUserId = new mongoose.Types.ObjectId(req.user.id);
+   const currentDate = new Date();
+   const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
+   const endOfYear = new Date(currentDate.getFullYear(), 11, 31);
+   console.log("startOfYear", startOfYear)
+   console.log("endOfYear", endOfYear)
+
+   const incomeData = await Incomes.aggregate([
+      {
+         $match: {
+            userId: currentUserId,
+            date: { $gte: startOfYear, $lte: endOfYear }
+         }
+      },
+      {
+         $group: {
+            _id: { $month: '$date' },
+            totalIncomes: { $sum: '$amount' },
+            date: { $first: '$date' }
+         }
+      },
+      {
+         $sort: { '_id': 1 }
+      }
+   ])
+
+   const expenseData = await Expenses.aggregate([
+      {
+         $match: {
+            userId: currentUserId,
+            date: { $gte: startOfYear, $lte: endOfYear }
+         }
+      },
+      {
+         $group: {
+            _id: { $month: '$date' },
+            totalExpenses: { $sum: '$amount' },
+            date: { $first: '$date' }
+         }
+      },
+      {
+         $sort: { '_id': 1 }
+      }
+   ])
+
+   const modifyDate = (data) => {
+      return data.map((content) => {
+         const date = new Date(content.date);
+         const formattedDate = date.toISOString().split('T')[0];
+         return { ...content, date: formattedDate };
+      });
+   };
+
+   const modifiedIncomeData = modifyDate(incomeData);
+   const modifiedExpenseData = modifyDate(expenseData);
+
+   console.log(modifiedIncomeData, modifiedExpenseData)
+
+   res.status(200).json({ success: true, message: "Total amount", modifiedIncomeData, modifiedExpenseData })
+
+})
+
 
 // post 
 export const addTransaction = asyncHandler(async (req, res, next) => {

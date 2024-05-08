@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import { genSalt, hash, compare } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-const UserSchema = new Schema({
+const User = new Schema({
     firstName: {
         type: String,
         required: [true, 'Please enter the first name'],
@@ -58,35 +58,35 @@ const UserSchema = new Schema({
 });
 
 // Encript password
-UserSchema.pre('save', async function (next) {
+User.pre('save', async function (next) {
     const salt = await genSalt(10);
     this.password = await hash(this.password, salt);
     next();
 });
 
 // Encrypt edited password
-// UserSchema.post('find', async function (next) {
+// User.post('find', async function (next) {
 //     const salt = await genSalt(10);
 //     this.password = await hash(this.password, salt);
 //     next();
 // });
-// UserSchema.methods.editPass = async function (next) {
+// User.methods.editPass = async function (next) {
 //     const salt = await genSalt(10);
 //     this.password = await hash(this.password, salt);
 //     next();
 // };
 
 // Sign JWT and return
-UserSchema.methods.getJWTWebToken = function () {
+User.methods.getJWTWebToken = function () {
     return jwt.sign({ id: this._id }, process.env.JWT_TOKEN_SECRET_KEY, {
         expiresIn: process.env.JWT_TOKEN_EXPIRE
     });
 }
 
 // Match enter password and hash
-UserSchema.methods.matchPassword = async function (enterPassword) {
+User.methods.matchPassword = async function (enterPassword) {
     return await compare(enterPassword, this.password);
 }
 
 
-export default model('User', UserSchema);
+export default model('User', User);

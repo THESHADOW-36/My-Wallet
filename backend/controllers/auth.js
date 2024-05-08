@@ -1,6 +1,5 @@
-import { genSalt, hash } from "bcrypt";
 import asyncHandler from "../middleware/async.js";
-import User from "../models/User.js";
+import User from "../models/user.js";
 import ErrorResponse from "../utils/errorResponse.js";
 
 

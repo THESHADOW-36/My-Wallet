@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(morgan('tiny'))
 app.use(cors());
-config({ path: './config/config.env' });
+config({ path: './config/.env' });
 connectDB();
 
 app.use('/api/v1',router);

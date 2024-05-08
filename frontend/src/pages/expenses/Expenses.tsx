@@ -6,6 +6,7 @@ import { API } from '../../constant/Network'
 import toast from 'react-hot-toast'
 import { Url } from '../../constant/Url'
 import { useNavigate, useParams } from 'react-router-dom'
+import { ModifyDate } from '../../components/utilityFunctions/ModifiedData'
 
 
 interface ExpData {
@@ -213,13 +214,8 @@ const Expenses: React.FC = () => {
    const getExpData = () => {
       API.get(Url.getExp, paramsObj, headers)?.subscribe({
          next(res: any) {
-            const modifiedData = res.data.map((content: any) => {
-               console.log("content :", content)
-               const dateTime = new Date(content.date);
-               const date = dateTime.toISOString().split("T")[0];
-               return { ...content, date: date };
-            });
-            setExpDataDB(modifiedData);
+            // console.log(ModifyDate(res.data))
+            setExpDataDB(ModifyDate(res.data));
          },
          error: (error: any) => {
             console.log('Error:', error);

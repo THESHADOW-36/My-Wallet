@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { API } from '../../constant/Network'
 import { Url } from '../../constant/Url'
 import toast from 'react-hot-toast'
+import { ModifyDate } from '../../components/utilityFunctions/ModifiedData'
 
 
 interface IncomeData {
@@ -199,13 +200,7 @@ const Incomes: React.FC = () => {
    const getIncomeData = () => {
       API.get(Url.getIncome, paramsObj, headers)?.subscribe({
          next(res: any) {
-            const modifiedData = res.data.map((content: any) => {
-               console.log("content :", content)
-               const dateTime = new Date(content.date);
-               const date = dateTime.toISOString().split("T")[0];
-               return { ...content, date: date };
-            });
-            setIncomeDataDB(modifiedData);
+            setIncomeDataDB(ModifyDate(res.data));
          },
          error: (error: any) => {
             console.log('Error:', error);

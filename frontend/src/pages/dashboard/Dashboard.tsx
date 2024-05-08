@@ -6,7 +6,9 @@ import { AccountBalanceTwoTone, CurrencyExchangeTwoTone, DataSaverOnTwoTone } fr
 // import { mwExpData } from "../data/MyWalletData";
 import { API } from "../../constant/Network";
 import { Url } from "../../constant/Url";
-import BarChart from "../../components/barChart/BarChart";
+import { Bar } from "react-chartjs-2";
+import { ModifyDate } from "../../components/utilityFunctions/ModifiedData";
+// import BarChart from "../../components/barChart/BarChart";
 
 ChartJS.register(
    CategoryScale,
@@ -41,6 +43,29 @@ interface ExpDataDB {
 
 
 const Homepage: React.FC = () => {
+
+   const [barChartData, setBarChartData] = useState({
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      datasets: [
+         {
+            label: 'Income by Month',
+            data: [],
+            backgroundColor: ['#3EB748'],
+            borderColor: ['#3EB748'],
+            borderWidth: 1,
+         },
+         {
+            label: 'Expenses by Month',
+            data: [],
+            backgroundColor: ['#991E1A'],
+            borderColor: ['#991E1A'],
+            borderWidth: 1
+         }
+      ]
+   });
+
+   console.log(barChartData)
+
    const [chartDataContents, setChartDataContents] = useState<ChartData>({
       month: '',
       income: 0,
@@ -49,16 +74,8 @@ const Homepage: React.FC = () => {
       loss: 0
    });
 
-   // const [progress, setProgress] = useState(0);
-   // useEffect(() => {
-   //    setInterval(() => {
-   //       setProgress((preProg) => (preProg >= 100 ? 0 : preProg + 10))
-   //    }, 800)
-   // }, [])
-
    const [expDataDB, setExpDataDB] = useState<ExpDataDB[]>([])
    const [accData, setAccData] = useState<AccData>({ exp: 0, income: 0, bal: 0 });
-   // console.log("expDataDB :", expDataDB)
    const paramsObj = { skip: 0, limit: 0 };
    const myToken = localStorage.getItem('MyToken');
    const headers = { Authorization: 'Bearer ' + myToken };
@@ -66,17 +83,11 @@ const Homepage: React.FC = () => {
    const accountDetails = () => {
       API.get(Url.stats, {}, headers)?.subscribe({
          next(res: any) {
+            console.log(res)
             setAccData({
                exp: res.expStats[0] ? res.expStats[0].totalExp : 0,
                income: res.incomeStats[0] ? res.incomeStats[0].totalIncome : 0,
                bal: res.balStats
-            });
-            setChartDataContents({
-               month: 'January 2024',
-               expense: res.expStats[0] ? res.expStats[0].totalExp : 0,
-               income: res.incomeStats[0] ? res.incomeStats[0].totalIncome : 0,
-               profit: res.balStats >= 0 ? res.balStats : 0,
-               loss: res.balStats <= 0 ? res.balStats : 0,
             });
          },
          error: (error: any) => {
@@ -90,8 +101,67 @@ const Homepage: React.FC = () => {
    const getExpData = () => {
       API.get(Url.getExp, paramsObj, headers)?.subscribe({
          next(res: any) {
-            setExpDataDB(res?.data);
+            setExpDataDB(ModifyDate(res?.data));
             // console.log("res :", res)
+         },
+         error: (error: any) => {
+            console.log('Error:', error);
+         },
+         complete: () => {
+            console.log('Completed');
+         }
+      })
+   }
+
+   const handleBarClick = (event: any, chartElement: any) => {
+      console.log("chartElement :", chartElement)
+      if (chartElement.length > 0) {
+         const clickedIndex = chartElement[0].index;
+         console.log("clickedIndex :", clickedIndex)
+         const clickedMonth = barChartData.labels[clickedIndex];
+         const clickedIncome = barChartData.datasets[0].data[clickedIndex];
+         const clickedExpense = barChartData.datasets[1].data[clickedIndex];
+         const clickedBal = clickedIncome - clickedExpense;
+         const clickedProfit = clickedBal >= 0 ? clickedBal : 0;
+         const clickedLoss = clickedBal < 0 ? clickedBal : 0;
+
+         setChartDataContents({
+            month: clickedMonth,
+            income: clickedIncome,
+            expense: clickedExpense,
+            profit: clickedProfit,
+            loss: clickedLoss
+         });
+      }
+   };
+
+   const getStatsData = () => {
+      API.get(Url.chartStats, paramsObj, headers)?.subscribe({
+         next(res: any) {
+
+            const incomeData = Array.from({ length: 12 }, (_, i) => {
+               const monthData = res.modifiedIncomeData.find((item: any) => item._id === i + 1);
+               return monthData ? monthData.totalIncomes : 0;
+            });
+
+            const expenseData = Array.from({ length: 12 }, (_, i) => {
+               const monthData = res.modifiedExpenseData.find((item: any) => item._id === i + 1);
+               return monthData ? monthData.totalExpenses : 0;
+            });
+
+            setBarChartData((prevState: any) => ({
+               ...prevState,
+               datasets: [
+                  {
+                     ...prevState.datasets[0],
+                     data: incomeData
+                  },
+                  {
+                     ...prevState.datasets[1],
+                     data: expenseData
+                  }
+               ]
+            }));
          },
          error: (error: any) => {
             console.log('Error:', error);
@@ -104,6 +174,7 @@ const Homepage: React.FC = () => {
 
    useEffect(() => {
       accountDetails();
+      getStatsData();
       getExpData();
    }, [])
 
@@ -166,13 +237,15 @@ const Homepage: React.FC = () => {
                <Divider />
                <Box sx={dbChart}>
                   <Box sx={dbBarChart}>
-                     <Box sx={{ width: '100%', height: '100%' }}><BarChart /></Box>
+                     <Box sx={{ width: '100%', height: '100%' }}>
+                        <Bar data={barChartData} options={{ onClick: handleBarClick }} />
+                     </Box>
                      <Typography sx={dbChartYear}>Year 2024</Typography>
                   </Box>
                   <Box sx={dbChartDataLayout}>
                      <Card sx={dbChartData}>
                         <CardContent>
-                           <Typography sx={dbChartDataYear}>{chartDataContents.month}</Typography>
+                           <Typography sx={dbChartDataYear}>{chartDataContents.month} 2024</Typography>
                            <Typography sx={dbChartDataName}>Income</Typography>
                            <Typography sx={dbChartDataCurrency}>₹ {chartDataContents.income}</Typography>
                            <Typography sx={dbChartDataName}>Expenses</Typography>

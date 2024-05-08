@@ -3,6 +3,7 @@ import asyncHandler from "../middleware/async.js";
 import Expenses from "../models/expenses.js";
 import Incomes from "../models/incomes.js";
 import User from "../models/User.js";
+import { modifyDate } from "../utils/modifyDate.js";
 
 
 export const statistics = asyncHandler(async (req, res, next) => {
@@ -37,10 +38,10 @@ export const statistics = asyncHandler(async (req, res, next) => {
       {
          $match: {
             userId: currentUserId,
-            // date: {
-            //    $gte: startDate,
-            //    $lte: endDate,
-            // }
+            date: {
+               $gte: startDate,
+               $lte: endDate,
+            }
          }
       },
       {
@@ -66,8 +67,8 @@ export const chartStats = asyncHandler(async (req, res, next) => {
    const currentDate = new Date();
    const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
    const endOfYear = new Date(currentDate.getFullYear(), 11, 31);
-   console.log("startOfYear", startOfYear)
-   console.log("endOfYear", endOfYear)
+   // console.log("startOfYear", startOfYear)
+   // console.log("endOfYear", endOfYear)
 
    const incomeData = await Incomes.aggregate([
       {
@@ -107,18 +108,10 @@ export const chartStats = asyncHandler(async (req, res, next) => {
       }
    ])
 
-   const modifyDate = (data) => {
-      return data.map((content) => {
-         const date = new Date(content.date);
-         const formattedDate = date.toISOString().split('T')[0];
-         return { ...content, date: formattedDate };
-      });
-   };
-
+   // console.log("expenseData", expenseData)
    const modifiedIncomeData = modifyDate(incomeData);
    const modifiedExpenseData = modifyDate(expenseData);
 
-   console.log(modifiedIncomeData, modifiedExpenseData)
 
    res.status(200).json({ success: true, message: "Total amount", modifiedIncomeData, modifiedExpenseData })
 

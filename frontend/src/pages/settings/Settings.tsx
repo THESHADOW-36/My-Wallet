@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -22,9 +23,9 @@ function Settings() {
 
 
    return (
-      <div>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
          <h2>Page is under construction, redirecting you to home page in {timer} sec..</h2>
-      </div>
+      </Box>
    )
 }
 

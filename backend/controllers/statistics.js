@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import asyncHandler from "../middleware/async.js";
 import Expenses from "../models/expenses.js";
 import Incomes from "../models/incomes.js";
-import User from "../models/User.js";
+import User from "../models/user.js";
 import { modifyDate } from "../utils/modifyDate.js";
 
 
